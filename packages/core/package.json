@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stduhpf/caritat.git"
+    "url": "https://github.com/nodejs/caritat.git"
   },
   "dependencies": {
     "@node-core/caritat-crypto": "workspace:*",
