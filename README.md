@@ -117,7 +117,7 @@ documentation on how to use the API.
   - not basing their vote in function of what other has voted (having the
     instigator always vote first helps alleviate this issue).
 - As a Voter, you need to trust the panel of Secret Holders for:
-  - not reconstitue the Vote Private Key before the vote closes.
+  - not reconstitute the Vote Private Key before the vote closes.
   - not leaking the Vote Private Key before the vote closes (if they have
     reconstructed it, which they should not do).
   - not basing their vote in function of what other has voted (if they have
@@ -182,7 +182,7 @@ The two other files can be used to vote without parsing the YAML file.
 Encrypting the ballot is necessary to ensure people voting early do not
 interfere or influence folks voting after them. At the end of the vote, the
 the Vote Private Key can be made public, so anyone can decrypt the ballots and verify
-the result themself. Or it can decided that the Vote Private Key won't be shared in
+the result themselves. Or it can decided that the Vote Private Key won't be shared in
 order to keep the votes anonymous, and a large enough panel of Secret Holders
 (depending on the vote settings) need to share their key parts, decrypt the
 ballots, and share the vote result without disclosing the content of the ballots.
@@ -211,5 +211,5 @@ you have a quantum computer at home to break the RSA encryption).
 
 The license makes no restrictions on how this tool should be used, but keep in
 mind that, as any electronic voting system, it can only be trusted as long as
-the unanonymized vote ballots are made public as soon as the vote closes, which
+the un-anonymized vote ballots are made public as soon as the vote closes, which
 may or may not be OK depending on the type of election you are using this for.
