@@ -4,17 +4,29 @@ The name comes from Marie Jean Antoine Nicolas de Caritat, Marquis of Condorcet,
 French philosopher and mathematician, notably known for championing an election
 method that now named after him.
 
-The goal of this project is to allow organisations of people working remotely to
-cast votes is a secure and transparent way, using a git repository to collect and
+The goal of this project is to allow organizations of people working remotely to
+cast votes in a secure and transparent way, using a git repository to collect and
 authenticate votes.
+
+## Requirements
+
+To be able to cast a vote or create a ballot you will
+need the following tools:
+
+- [Node.js v16+](https://nodejs.org)
+- [git](https://git-scm.com)
+
+If you want to cast a vote with GitHub verified signature
+you will also need to install [PGP](https://www.openpgp.org/).
+Later in the documentation we will check how to install PGP depending
+on your device and how to setup your key, so if you are not familiar
+with it we recommend skipping it for now.
 
 ## Usage
 
 ### Participate to a vote using Caritat
 
 #### Node.js CLI
-
-Requires [Node.js](https://nodejs.org) 16+ and [git](https://git-scm.com).
 
 If the vote is setup on a GitHub pull request and you have
 [`gh`](https://cli.github.com) locally installed and logged in to your GitHub
