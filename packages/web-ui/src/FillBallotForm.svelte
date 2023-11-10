@@ -66,19 +66,24 @@
 {:then voteConfig}
   <form on:submit={onSubmit}>
     <ul>
-      {#each voteConfig.imageCandidates ?? [] as candidate}
+      {#each voteConfig.imageCandidates ?? voteConfig.candidates ?? [] as candidate}
         <li>
-          <img src={candidate.src} alt={candidate.alt} /><label
+          {#if typeof candidate === "string"}
+            {candidate}
+          {:else}
+            <img src={candidate.src} alt={candidate.alt} />
+          {/if}
+          <label
             >Score: <input
               type="number"
               value="0"
-              name={candidate.raw}
+              name={typeof candidate === "string" ? candidate : candidate.raw}
             /></label
           >
         </li>
       {/each}
     </ul>
-    <button type="submit">Generate ballot</button>
+    <button type="submit">Generate encrypted ballot</button>
   </form>
 {:catch error}
   <p>

@@ -207,6 +207,7 @@ async function act(
             src: imageMatch[2],
           };
         }
+        return raw;
       })
     );
     return voteData;
