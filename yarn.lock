@@ -340,7 +340,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@node-core/caritat@workspace:*, @node-core/caritat@workspace:packages/core":
+"@node-core/caritat@workspace:*, @node-core/caritat@workspace:^, @node-core/caritat@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@node-core/caritat@workspace:packages/core"
   dependencies:
@@ -451,6 +451,13 @@ __metadata:
   version: 1.0.1
   resolution: "@types/estree@npm:1.0.1"
   checksum: 76f967f120d15b8b8747312bff3a3016e480662d9a3dc0b1deb8bfb565898edc4c195bf924bc1398426c0a736844e7b4923cf176900fb4c7d5531907b01d2411
+  languageName: node
+  linkType: hard
+
+"@types/js-yaml@npm:^4":
+  version: 4.0.9
+  resolution: "@types/js-yaml@npm:4.0.9"
+  checksum: 139f705e10a7c50459eeee31d18eec685f8df689a6686eff392466d4accb72ec1ecb8da2d71349945de8663cd0f22f715420b5ea19774190e1feb595827f8439
   languageName: node
   linkType: hard
 
@@ -3311,9 +3318,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web-ui@workspace:packages/web-ui"
   dependencies:
+    "@node-core/caritat": "workspace:^"
     "@sveltejs/vite-plugin-svelte": "npm:^2.0.1"
     "@tsconfig/svelte": "npm:^4.0.0"
+    "@types/js-yaml": "npm:^4"
     gh-pages: "npm:^4.0.0"
+    js-yaml: "npm:^4.1.0"
     svelte: "npm:^4.0.0"
     svelte-check: "npm:^3.0.0"
     svelte-preprocess: "npm:^5.0.0"

@@ -1,5 +1,8 @@
+import * as yaml from "js-yaml";
+import type { VoteFileFormat } from "@node-core/caritat/parser";
+import base64ArrayBuffer from "./uint8ArrayToBase64";
+
 const githubPRUrlPattern = /^\/([^/]+)\/([^/]+)\/pull\/(\d+)\/?$/;
-const startCandidateList = /\npreferences:[^\n\S]*(#[^\n]*)?\n/;
 
 const fetch2JSON = (response: Awaited<ReturnType<typeof fetch>>) =>
   response.ok
@@ -184,97 +187,39 @@ async function act(
     },
   };
   try {
-    const { voteFile, ballotFile, publicKeyFile } = await fetchVoteFilesInfo(
-      url as string,
-      fetchOptions
+    const { voteFile } = await fetchVoteFilesInfo(url as string, fetchOptions);
+
+    const response = await fetch(voteFile.contents_url, contentsFetchOptions);
+    if (!response.ok)
+      throw new Error(`Fetch error: ${response.status} ${response.statusText}`);
+    const ballotData = await response.arrayBuffer();
+    const hash = await crypto.subtle.digest("SHA-512", ballotData);
+    const decoder = new TextDecoder();
+    const voteData = yaml.load(decoder.decode(ballotData)) as VoteFileFormat;
+    voteData.checksum = base64ArrayBuffer(new Uint8Array(hash));
+    voteData.imageCandidates = shuffle(
+      voteData.candidates.map((raw) => {
+        const imageMatch = /^!\[([^\]]+)\]\(([^)]+)\)$/.exec(raw);
+        if (imageMatch != null) {
+          return {
+            raw,
+            alt: imageMatch[1],
+            src: imageMatch[2],
+          };
+        }
+      })
     );
-
-    // This won't catch all the cases (if the PR modifies an existing file
-    // rather than creating a new one, or if the YAML is formatted differently),
-    // but it saves us from doing another request so deemed worth it.
-    const shouldShuffleCandidates = /^\+canShuffleCandidates:\s*true$/m.test(
-      voteFile.patch
-    );
-
-    return [
-      fetch(ballotFile.contents_url, contentsFetchOptions)
-        .then((response) =>
-          response.ok
-            ? response.text()
-            : Promise.reject(
-                new Error(
-                  `Fetch error: ${response.status} ${response.statusText}`
-                )
-              )
-        )
-        .then(
-          shouldShuffleCandidates
-            ? (ballotData) => {
-                const match = startCandidateList.exec(ballotData);
-                if (match == null) {
-                  console.warn(
-                    "Cannot find the list of candidates to shuffle, ignoring..."
-                  );
-                  return ballotData;
-                }
-                const headerEnd = match.index + match[0].length - 1;
-
-                const candidates = [];
-                let currentCandidate: string;
-                let lineStart;
-                let lineEnd = headerEnd;
-                for (;;) {
-                  lineStart = lineEnd + 1;
-                  lineEnd = ballotData.indexOf("\n", lineStart);
-                  if (lineEnd === -1) {
-                    if (lineStart !== ballotData.length) {
-                      currentCandidate += ballotData.slice(lineStart - 1);
-                    }
-                    break;
-                  }
-                  if (
-                    ballotData[lineStart] !== " " ||
-                    ballotData[lineStart + 1] !== " "
-                  )
-                    break;
-                  if (ballotData[lineStart + 2] === "-") {
-                    if (currentCandidate) candidates.push(currentCandidate);
-                    currentCandidate = "";
-                  }
-                  currentCandidate += ballotData.slice(lineStart - 1, lineEnd);
-                }
-                if (currentCandidate) candidates.push(currentCandidate);
-                return (
-                  ballotData.slice(0, headerEnd) +
-                  shuffle(candidates).join("") +
-                  "\n" +
-                  ballotData.slice(lineStart)
-                );
-              }
-            : undefined
-        ),
-      fetch(publicKeyFile.contents_url, contentsFetchOptions).then((response) =>
-        response.ok
-          ? response.arrayBuffer()
-          : Promise.reject(
-              new Error(
-                `Fetch error: ${response.status} ${response.statusText}`
-              )
-            )
-      ),
-    ] as [Promise<string>, Promise<ArrayBuffer>];
+    return voteData;
   } catch (err) {
     const error = Promise.reject(err);
-    return [error, error] as [never, never];
+    return error as never;
   }
 }
 
 let previousURL: string | null;
 export default function fetchFromGitHub(
   { url, username, token }: { url: string; username?: string; token?: string },
-  callback: (
-    errOfResult: [Promise<string>, Promise<ArrayBuffer>]
-  ) => void | Promise<void>
+  callback: (errOfResult: Promise<VoteFileFormat>) => void | Promise<void>
 ) {
   const options =
     username && token
