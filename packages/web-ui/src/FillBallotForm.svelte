@@ -37,7 +37,16 @@
         );
         const ballot = templateBallot(voteConfig, undefined, preferences);
         const summary = summarizeCondorcetBallotForVoter(
-          getSummarizedBallot({ voter: {}, preferences })
+          getSummarizedBallot({
+            voter: {},
+            preferences: new Map(
+              voteConfig.imageCandidates.map((c) =>
+                typeof c === "string"
+                  ? [c, preferences.get(c)]
+                  : [c.alt, preferences.get(c.raw)]
+              )
+            ),
+          })
         );
 
         if (!confirm(summary)) throw new Error("Aborted by user");
