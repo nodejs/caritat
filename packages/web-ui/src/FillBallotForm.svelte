@@ -19,6 +19,9 @@
   const textEncoder =
     typeof TextEncoder === "undefined" ? { encode() {} } : new TextEncoder();
 
+  function onClick(this: HTMLImageElement, event: MouseEvent) {
+    (this.nextElementSibling.lastElementChild as HTMLInputElement).focus();
+  }
   function onSubmit(this: HTMLFormElement, event: SubmitEvent) {
     event.preventDefault();
     registerEncryptedBallot(
@@ -71,7 +74,7 @@
           {#if typeof candidate === "string"}
             {candidate}
           {:else}
-            <img src={candidate.src} alt={candidate.alt} />
+            <img src={candidate.src} alt={candidate.alt} on:click={onClick} />
           {/if}
           <label
             >Score: <input
@@ -97,3 +100,20 @@
     </p>
   {/if}
 {/await}
+
+<style>
+  ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+
+  ul > li {
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
