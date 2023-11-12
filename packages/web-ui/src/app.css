@@ -1,0 +1,187 @@
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  body {
+    @apply bg-white
+      text-neutral-950
+      dark:bg-neutral-950
+      dark:text-white
+      w-screen
+      h-screen;
+
+      main {
+        @apply lg:w-1/2
+          w-full
+          mx-auto
+          px-4
+          py-8;
+      }
+  }
+
+  /* Base styles from nodejs.org */
+  a,
+a:link,
+a:visited {
+  @apply text-green-600 dark:text-green-400;
+
+  &:hover {
+    @apply text-green-900
+      dark:text-green-300;
+  }
+}
+
+ul {
+  @apply list-disc
+    px-5
+    leading-6
+    text-neutral-900
+    dark:text-white;
+}
+
+ol {
+  @apply list-decimal
+    px-5
+    leading-6
+    text-neutral-900
+    dark:text-white;
+}
+
+table {
+  @apply w-full 
+    border-separate 
+    border-spacing-0 
+    rounded
+    border
+    border-neutral-200 
+    text-left
+    text-sm 
+    dark:border-neutral-800;
+
+  th,
+  td {
+    @apply border 
+      border-r-0 
+      border-t-0 
+      border-neutral-200
+      px-4
+      py-2 
+      text-neutral-900 
+      dark:border-neutral-800 
+      dark:text-white;
+  }
+
+  th {
+    @apply font-semibold;
+  }
+
+  tr:last-child td {
+    @apply border-b-0;
+  }
+
+  td:first-child,
+  th:first-child {
+    @apply border-l-0;
+  }
+}
+
+/* Different from nodejs.org */
+h1 {
+  @apply text-4xl
+    font-bold;
+}
+
+h2 {
+  @apply text-3xl
+    font-bold;
+}
+
+h3 {
+  @apply text-2xl
+    font-bold;
+}
+
+h4 {
+  @apply text-xl
+    font-bold;
+}
+
+h5 {
+  @apply text-lg
+    font-bold;
+}
+
+h6 {
+  @apply text-base
+    font-bold;
+}
+
+p {
+  @apply mb-4;
+}
+
+details {
+  @apply border
+    border-neutral-200
+    rounded
+    overflow-hidden
+    shadow-sm
+    mb-4
+    dark:border-neutral-800;
+
+  summary {
+    @apply
+    font-semibold
+      px-4
+      py-2
+      bg-neutral-100
+      dark:bg-neutral-900
+      cursor-pointer;
+  }
+
+  summary::-webkit-details-marker {
+    @apply text-green-600;
+  }
+
+  summary:focus {
+    @apply outline-none;
+  }
+
+  summary:hover {
+    @apply bg-neutral-200
+      dark:bg-neutral-800;
+  }
+
+  summary:active {
+    @apply bg-neutral-300
+      dark:bg-neutral-700;
+  }
+}
+
+textarea {
+  @apply block
+    w-full
+    rounded
+    border
+    border-neutral-200
+    text-neutral-900
+    dark:border-neutral-800
+    dark:text-white
+    focus:outline-none
+    focus:border-green-600
+    focus:ring-1
+    focus:ring-green-600
+    focus:ring-opacity-50
+    p-4
+    resize-none;
+}
+
+code {
+  @apply rounded-sm
+    bg-green-200
+    px-1
+    py-px
+    text-green-600
+    dark:bg-green-800
+    dark:text-green-100;
+}
