@@ -20,7 +20,9 @@
     typeof TextEncoder === "undefined" ? { encode() {} } : new TextEncoder();
 
   function onClick(this: HTMLImageElement, event: MouseEvent) {
-    (this.nextElementSibling.lastElementChild as HTMLInputElement).focus();
+    (
+      this.parentElement.nextElementSibling.lastElementChild as HTMLInputElement
+    ).focus();
   }
   function onSubmit(this: HTMLFormElement, event: SubmitEvent) {
     event.preventDefault();
@@ -76,6 +78,9 @@
 {#await fetchedVoteConfig}
   <p>...loading as {username || "anonymous"}</p>
 {:then voteConfig}
+  <p class="instructions">
+    {voteConfig.headerInstructions}
+  </p>
   <form on:submit={onSubmit}>
     <ul>
       {#each voteConfig.imageCandidates ?? voteConfig.candidates ?? [] as candidate}
@@ -83,7 +88,10 @@
           {#if typeof candidate === "string"}
             {candidate}
           {:else}
-            <img src={candidate.src} alt={candidate.alt} on:click={onClick} />
+            <figure>
+              <img src={candidate.src} alt={candidate.alt} on:click={onClick} />
+              <figcaption>{candidate.alt}</figcaption>
+            </figure>
           {/if}
           <label
             >Score: <input
@@ -97,6 +105,9 @@
     </ul>
     <button type="submit">Generate encrypted ballot</button>
   </form>
+  <p class="instructions">
+    {voteConfig.footerInstructions}
+  </p>
 {:catch error}
   <p>
     An error occurred: {error?.message ?? error}
@@ -118,9 +129,23 @@
     gap: 1rem;
     padding: 0;
     margin: 0 0 1rem;
+    justify-content: center;
   }
 
-  ul > li {
+  figcaption {
+    text-align: center;
+  }
+
+  label {
+    margin-top: auto;
+  }
+
+  .instructions {
+    white-space: pre-line;
+  }
+
+  ul > li,
+  figure {
     max-width: 240px;
     display: flex;
     flex-direction: column;
