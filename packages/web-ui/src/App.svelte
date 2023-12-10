@@ -4,7 +4,7 @@
   import GitHubCredentials from "./GitHubCredentials.svelte";
   import FindPrForm from "./FindPRForm.svelte";
 
-  let encryptDataPromise = new Promise(() => {}) as Promise<never>;
+  let encryptDataPromise = new Promise<never>(() => {});
 
   let url = globalThis.location?.hash.slice(1);
 
