@@ -4,6 +4,7 @@
 
 ```sh
 corepack yarn install
+corepack yarn build
 corepack yarn web:dev
 ```
 
