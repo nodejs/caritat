@@ -1,6 +1,8 @@
 <script lang="ts">
   import { beforeUpdate } from "svelte";
-  import { fetchNewVoteFileURL } from "./fetchDataFromGitHub";
+  import Button from "../common/button/index.svelte"
+  import TextBox from "../common/textbox/index.svelte";
+  import { fetchNewVoteFileURL } from "../../fetchDataFromGitHub";
 
   export let encryptDataPromise: Promise<string | never>;
   export let url: string;
@@ -35,13 +37,13 @@
       {/if}
     {/await}
   </div>
-  <button type="button" on:click={copyToClipboard}>Copy to clipboard</button>
-  <p>
+  <Button onClick={copyToClipboard}>Copy to clipboard</Button>
+  <TextBox>
     Cast a vote by pasting this on a <a
       href={fetchNewVoteFileURL(url)}
       target="_blank">new file on the vote branch</a
     >.
-  </p>
+  </TextBox>
 {:catch error}
   An error occurred: {error?.message ?? error}
 {/await}

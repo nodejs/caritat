@@ -39,5 +39,12 @@
   ],
   "resolutions": {
     "jest-environment-node": "patch:jest-environment-node@npm:27.4.6#.yarn/patches/jest-environment-node-npm-27.4.6-596a121c86"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "web-ui": "workspace:^",
+    "workspace": "^0.0.1-preview.1"
   }
 }

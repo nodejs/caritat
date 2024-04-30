@@ -1,8 +1,9 @@
 <script lang="ts">
-  import CopyEncryptedBallotForm from "./CopyEncryptedBallotForm.svelte";
-  import FillBallotForm from "./FillBallotForm.svelte";
-  import GitHubCredentials from "./GitHubCredentials.svelte";
-  import FindPrForm from "./FindPRForm.svelte";
+  import CopyEncryptedBallotForm from "./components/section/CopyEncryptedBallotForm.svelte";
+  import FillBallotForm from "./components/section/FillBallotForm.svelte";
+  import GitHubCredentials from "./components/section/GitHubCredentials.svelte";
+  import FindPrForm from "./components/section/FindPRForm.svelte";
+  import './app.css';
 
   let encryptDataPromise = new Promise(() => {}) as Promise<never>;
 
@@ -35,21 +36,25 @@
     );
   }
 </script>
+<main>
+  <h1
+    class="text-center"
+  >Caritat</h1>
 
-<h1>Caritat</h1>
+  <details>
+    <GitHubCredentials {updateAuth} {username} {token} />
+  </details>
 
-<details>
-  <GitHubCredentials {updateAuth} {username} {token} />
-</details>
+  <hr />
 
-<hr />
+  <details open={step === 0}>
+    <FindPrForm {url} />
+  </details>
+  <details open={step === 1}>
+    <FillBallotForm {url} {username} {token} {registerEncryptedBallot} />
+  </details>
+  <details open={step === 2}>
+    <CopyEncryptedBallotForm {encryptDataPromise} {url} />
+  </details>
+</main>
 
-<details open={step === 0}>
-  <FindPrForm {url} />
-</details>
-<details open={step === 1}>
-  <FillBallotForm {url} {username} {token} {registerEncryptedBallot} />
-</details>
-<details open={step === 2}>
-  <CopyEncryptedBallotForm {encryptDataPromise} {url} />
-</details>

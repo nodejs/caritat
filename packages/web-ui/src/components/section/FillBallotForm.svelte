@@ -1,9 +1,11 @@
 <script lang="ts">
   import { beforeUpdate } from "svelte";
+  import TextBox from "../common/textbox/index.svelte";
+  import Button from "../common/button/index.svelte";
 
   import encryptData from "@node-core/caritat-crypto/encrypt";
-  import uint8ArrayToBase64 from "./uint8ArrayToBase64.ts";
-  import fetchFromGitHub from "./fetchDataFromGitHub.ts";
+  import uint8ArrayToBase64 from "../../uint8ArrayToBase64.ts";
+  import fetchFromGitHub from "../../fetchDataFromGitHub.ts";
 
   export let url, username, token, registerEncryptedBallot;
 
@@ -40,25 +42,26 @@
 <summary>Fill in ballot</summary>
 
 {#await fetchedBallot}
-  <p>...loading as {username || "anonymous"}</p>
+  <TextBox>
+    ...loading as {username || "anonymous"}
+  </TextBox>
 {:then ballotPlainText}
-  <form on:submit={onSubmit}>
+  <form class="flex flex-row justify-between items-center p-2">
     <textarea name="ballot">{ballotPlainText}</textarea>
     {#await fetchedPublicKey}
-      <button type="submit" disabled>Loading public key…</button>
+      <Button onClick={onSubmit} type="submit" disabled>Loading public key…</Button>
     {:then}
-      <button type="submit">Encrypt ballot</button>
+      <Button onClick={onSubmit}  type="submit">Encrypt ballot</Button>
     {/await}
   </form>
 {:catch error}
-  <p>
+  <TextBox variant="error">
     An error occurred: {error?.message ?? error}
-  </p>
-
+  </TextBox>
   {#if !token || !username}
-    <p>
+    <TextBox variant="info">
       Maybe consider providing an access token, authenticated API calls are more
       likely to succeed.
-    </p>
+    </TextBox>
   {/if}
 {/await}

@@ -1,0 +1,65 @@
+.container {
+    @apply
+      flex
+      w-fit
+      flex-col
+      gap-2
+      p-2
+      m-2;
+  
+    .top {
+      @apply inline-flex
+        gap-4
+        text-lg;
+  
+      svg {
+        @apply h-6
+          w-6;
+      }
+    }
+  }
+  
+  .default {
+    @apply w-full
+      rounded
+      border
+      border-neutral-400
+      bg-neutral-100
+      text-neutral-700
+      dark:border-neutral-700
+      dark:bg-neutral-400;
+  }
+  
+  .info {
+    @apply w-full
+      rounded
+      border
+      border-info-400
+      bg-info-100
+      text-info-700
+      dark:border-info-700
+      dark:bg-info-400;
+  }
+  
+  .warning {
+    @apply w-full
+      rounded
+      border
+      border-warning-400
+      bg-warning-100
+      text-warning-700
+      dark:border-warning-700
+      dark:bg-warning-400;
+  }
+  
+  .error {
+    @apply w-full
+      rounded
+      border
+      border-danger-400
+      bg-danger-100
+      text-danger-700
+      dark:border-danger-700
+      dark:bg-danger-400;
+  }
+  
