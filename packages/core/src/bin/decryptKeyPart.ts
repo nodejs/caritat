@@ -52,7 +52,6 @@ if (argv[2] === "-h" || argv[2] === "--help") {
     { captureStdout: true }
   );
 } else {
-  // @ts-expect-error toArray exists
   yamlString = (await stdin.toArray()).join();
 }
 
@@ -64,9 +63,8 @@ const out = await Promise.any(
       stdio: ["pipe", "pipe", "inherit"],
       signal: ac.signal,
     });
-    // @ts-expect-error toArray exists
     const stdout = cp.stdout.toArray();
-    stdout.catch(Function.prototype); // ignore errors.
+    stdout.catch(Function.prototype as any); // ignore errors.
     cp.stdin.end(share);
     const [code] = await Promise.race([
       once(cp, "exit"),
