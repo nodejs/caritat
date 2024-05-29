@@ -204,7 +204,7 @@ may or may not be OK depending on the type of election you are using this for.
 
 ## How does the tool pick the winner?
 
-The default vote method is the Condorcet winner. This repository is probably not the best place to
+The default vote counting system is the Condorcet method (preferential ranked votes). This repository is probably not the best place to
 learn about vote theory, but all you need to know it's the best option to pick an option that
 majority of voters will agree with.
 
@@ -213,11 +213,12 @@ three candidates (A, B, and C). You set score 100000 to candidate A, score -1000
 and 0 to candidate C. Here's how Caritat will count the votes:
 
 1. Caritat puts up A against B, see that you set a higher score to A, and count your vote for A.
-   _A gets more vote than B, A wins the duel against B._
+   Because in this example, you're the only one voter, there's no other ballot to count.
+   _A gets 1 vote, B gets 0 votes, A wins the duel against B._
 2. Caritat puts up B against C, see that you set a higher score to C, and count your vote for C.
-   _C gets more vote than B, C wins the duel against B._
+   _C gets 1 vote, B gets 0 votes, C wins the duel against B._
 3. Caritat puts up A against C, see that you set a higher score to A, and count your vote for A.
-   _A gets more vote than C, A wins the duel against C._
+   _A gets 1 vote, C gets 0 votes, A wins the duel against C._
 
 Caritat will show the following table of result:
 
@@ -229,9 +230,10 @@ Caritat will show the following table of result:
 
 The winner is _A_, as it is the candidate that wins the most duels (also called the Condorcet winner).
 
-It's worth noting that the absolute values in the ballot (100000, 0, and -100000) have no influence
-on the vote result. Only the relative values are important: is it higher, lower, or equal compared
-to the values of the other candidates.
+It's worth noting that the exact numbers on the ballot (like 100000, 0, and -100000) 
+don't change the result of the vote. What really matters is how these numbers stack up 
+against the other candidates' numbers in your ballot: if they are bigger, smaller, or the
+same. The numbers used in the other ballots have no effect on how your ballot is counted.
 
 In practice, there will be probably more than one voter, and potentially more than three candidates,
 but the same principles apply: each pair of candidates is evaluated, the candidate that wins the
