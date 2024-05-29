@@ -67,7 +67,8 @@ const out = await Promise.any(
       signal: ac.signal,
     });
     const stdout = cp.stdout.toArray();
-    stdout.catch(Function.prototype as any); // ignore errors.
+    // @ts-expect-error potential errors would be handled below
+    stdout.catch(Function.prototype);
     cp.stdin.end(share);
     const [code] = await Promise.race([
       once(cp, "exit"),
