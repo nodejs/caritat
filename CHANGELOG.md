@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.1](https://github.com/nodejs/caritat/compare/v1.4.0...v1.4.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* add `permissions` for GHA workflows ([aa7766f](https://github.com/nodejs/caritat/commit/aa7766f7930941dd3dc236253ff8fa90d4e1e929))
+* **deploy:** empty commit to trigger a release ([fdf6764](https://github.com/nodejs/caritat/commit/fdf6764f596c5ff1d597eb07e0537c7e6d03c3d0))
+* **deploy:** use `"packages"` field in Release Please config ([a130d65](https://github.com/nodejs/caritat/commit/a130d65807fdc770cadde823d323d22d2b3f459a))
+* **deps:** bump npm dependencies ([#34](https://github.com/nodejs/caritat/issues/34)) ([b548f76](https://github.com/nodejs/caritat/commit/b548f7692bad85b15ba3f747578dc410abfdc808))
+
 ## [1.4.0](https://github.com/nodejs/caritat/compare/v1.3.1...v1.4.0) (2024-06-01)
 
 
