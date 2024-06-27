@@ -11,9 +11,12 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
+    "@node-core/caritat": "workspace:^",
     "@sveltejs/vite-plugin-svelte": "^2.0.1",
     "@tsconfig/svelte": "^4.0.0",
+    "@types/js-yaml": "^4",
     "gh-pages": "^4.0.0",
+    "js-yaml": "^4.1.0",
     "svelte": "^4.0.0",
     "svelte-check": "^3.0.0",
     "svelte-preprocess": "^5.0.0",
