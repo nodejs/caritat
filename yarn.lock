@@ -920,10 +920,7 @@ __metadata:
     "@types/eslint": "npm:^8"
     "@types/js-yaml": "npm:^4.0.5"
     "@types/node": "npm:^20.0.0"
-    autoprefixer: "npm:^10.4.20"
     eslint: "npm:^9.2.0"
-    postcss: "npm:^8.4.47"
-    tailwindcss: "npm:^3.4.13"
     typescript: "npm:^5.1.3"
     typescript-eslint: "npm:^7.8.0"
   languageName: unknown
