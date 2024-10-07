@@ -36,14 +36,14 @@
   }
 </script>
 
-<h1>Caritat</h1>
+<header>
+  <h1>Caritat</h1>
+  <p>A voting software for remote teams</p>
+</header>
 
 <details>
   <GitHubCredentials {updateAuth} {username} {token} />
 </details>
-
-<hr />
-
 <details open={step === 0}>
   <FindPrForm {url} />
 </details>
