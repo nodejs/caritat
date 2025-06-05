@@ -1,32 +1,16 @@
 <script lang="ts">
   import { beforeUpdate } from "svelte";
 
-  import encryptData from "@node-core/caritat-crypto/encrypt";
-  import uint8ArrayToBase64 from "./uint8ArrayToBase64.ts";
   import fetchFromGitHub from "./fetchDataFromGitHub.ts";
 
-  export let url, username, token, registerEncryptedBallot;
+  export let url, username, token, registerBallot;
 
   let fetchedBallot: Promise<string>, fetchedPublicKey;
-
-  const textEncoder =
-    typeof TextEncoder === "undefined" ? { encode() {} } : new TextEncoder();
 
   function onSubmit(this: HTMLFormElement, event: SubmitEvent) {
     event.preventDefault();
     const textarea = this.elements.namedItem("ballot") as HTMLInputElement;
-    registerEncryptedBallot(
-      (async () => {
-        const { encryptedSecret, saltedCiphertext } = await encryptData(
-          textEncoder.encode(textarea.value) as Uint8Array,
-          await fetchedPublicKey
-        );
-        return JSON.stringify({
-          encryptedSecret: uint8ArrayToBase64(new Uint8Array(encryptedSecret)),
-          data: uint8ArrayToBase64(saltedCiphertext),
-        });
-      })()
-    );
+    registerBallot(textarea.value, fetchedPublicKey);
   }
 
   fetchedBallot = fetchedPublicKey = Promise.reject("no data");
