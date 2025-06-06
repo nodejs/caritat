@@ -31,7 +31,7 @@
     {#await fetchedPublicKey}
       <button type="submit" disabled>Loading public key…</button>
     {:then}
-      <button type="submit">Encrypt ballot</button>
+      <button type="submit">Next</button>
     {/await}
   </form>
 {:catch error}

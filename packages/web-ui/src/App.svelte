@@ -33,7 +33,7 @@
   });
 
   function maybeUpdateSummary() {
-    ballotSummary = shouldSummarize ? (async () => {
+    ballotSummary = shouldSummarize && ballot ? (async () => {
       // Lazy-loading as the summary is only a nice-to-have.
       const { getSummarizedBallot } = await import("./ballotSummary.ts");
       return getSummarizedBallot(ballot);
@@ -43,7 +43,7 @@
     encryptDataPromise = (async () => {
         const { encryptedSecret, saltedCiphertext } = await encryptData(
           textEncoder.encode(ballotContent) as Uint8Array,
-          await fetchedPublicKey
+          await publicKey
         );
         return JSON.stringify({
           encryptedSecret: uint8ArrayToBase64(new Uint8Array(encryptedSecret)),
