@@ -73,7 +73,10 @@ interface BallotSummarize {
   minCandidates?: VoteCandidate[];
   orderedCandidates?: VoteCandidate[][];
 }
-export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
+export function getSummarizedBallot(
+  ballot: Ballot,
+  keepOnlyFirstLineInSummary?: boolean
+): BallotSummarize {
   let maxNote = Number.MIN_SAFE_INTEGER;
   let minNote = Number.MAX_SAFE_INTEGER;
   for (const [, score] of ballot.preferences) {
@@ -91,7 +94,8 @@ export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
       for (const [candidate, score] of ballot.preferences) {
         const candidatesForThisScore = orderedPreferences.get(score);
         const markdownCandidate = `**${cleanMarkdown(
-          candidate.replace(/\.$/, "")
+          candidate,
+          keepOnlyFirstLineInSummary
         )}**`;
         if (candidatesForThisScore == null) {
           orderedPreferences.set(score, [markdownCandidate]);
@@ -106,7 +110,7 @@ export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
       };
     }
     const group = score === minNote ? minCandidates : maxCandidates;
-    group.push(`**${cleanMarkdown(candidate).replace(/\.$/, "")}**`);
+    group.push(`**${cleanMarkdown(candidate, keepOnlyFirstLineInSummary)}**`);
   }
   return { minCandidates, maxCandidates };
 }
@@ -116,7 +120,7 @@ export default class CondorcetElectionSummary extends ElectionSummary {
 
   summarizeBallot(ballot: Ballot) {
     return summarizeCondorcetBallotForElectionSummary(
-      getSummarizedBallot(ballot),
+      getSummarizedBallot(ballot, this.keepOnlyFirstLineInSummary),
       4
     );
   }
