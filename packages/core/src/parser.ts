@@ -16,6 +16,7 @@ export interface VoteFileFormat {
   checksum?: string;
 
   canShuffleCandidates?: boolean;
+  keepOnlyFirstLineInSummary?: boolean;
   requireSignedBallots?: boolean;
 }
 function instanceOfVoteFile(object): object is VoteFileFormat {

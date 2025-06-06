@@ -3,7 +3,14 @@ function cleanUnsupportedMarkdown(txt: string): string {
   return txt.replace(/([_~*\\[\]<>`])/g, "\\$1");
 }
 
-export default function cleanMarkdown(txt: string): string {
+function reduceToFirstLine(candidate: string) {
+  const i = candidate.indexOf('\n')
+  return i === -1 ? candidate : candidate.slice(0, i - Number(candidate[i] === '.' || candidate === ':'));
+}
+export default function cleanMarkdown(txt: string, keepOnlyFirstLineInSummary?: boolean): string {
+  if (keepOnlyFirstLineInSummary) txt = reduceToFirstLine(txt);
+  else if (txt.endsWith('.') || txt.endsWith(':')) txt = txt.slice(0, -1);
+
   // Escape backticks for edge case scenarii (no code span support).
   if (txt.includes("``") || txt.includes("\\`")) {
     return cleanUnsupportedMarkdown(txt);
