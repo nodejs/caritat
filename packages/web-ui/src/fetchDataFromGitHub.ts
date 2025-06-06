@@ -226,6 +226,10 @@ async function act(
                 for (;;) {
                   lineStart = lineEnd + 1;
                   lineEnd = ballotData.indexOf("\n", lineStart);
+                  if (lineEnd === lineStart) {
+                    currentCandidate += '\n';
+                    continue;
+                  }
                   if (lineEnd === -1) {
                     if (lineStart !== ballotData.length) {
                       currentCandidate += ballotData.slice(lineStart - 1);
