@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/nodejs/caritat/compare/v1.6.0...v1.6.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* **web-ui:** shuffling candidates with line returns ([#57](https://github.com/nodejs/caritat/issues/57)) ([0dc81c9](https://github.com/nodejs/caritat/commit/0dc81c994010169f9f15ea5132ebfe42657aa9c8))
+
 ## [1.6.0](https://github.com/nodejs/caritat/compare/v1.5.0...v1.6.0) (2024-06-26)
 
 
