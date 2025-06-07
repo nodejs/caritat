@@ -32,7 +32,7 @@ $EDITOR "$tmpDir/$path/ballot.yml"
 # Commit the encrypted JSON vote data.
 (cd "$tmpDir" && \
   git add "$tmpDir/$path/$username.json" && \
-  git commit -m "vote from $username")
+  git commit -n -m "vote from $username")
 
 # Pushing to the remote repository.
 (cd "$tmpDir" && \
