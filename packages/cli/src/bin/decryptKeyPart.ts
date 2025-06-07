@@ -60,10 +60,15 @@ if (argv[2] === "-h" || argv[2] === "--help") {
 
 const { shares } = yaml.load(yamlString) as VoteFileFormat;
 const ac = new AbortController();
+const gpgParams = (process.env.CARITAT_GPG_PARAMS ?? "").split(/\s/g);
 const out = await Promise.any(
   shares.map(async (share) => {
-    const cp = spawn(env.GPG_BIN || "gpg", ["-d"], {
-      stdio: ["pipe", "pipe", "inherit"],
+    const cp = spawn(env.GPG_BIN || "gpg", ["-d", ...gpgParams], {
+      stdio: [
+        "pipe",
+        "pipe",
+        process.env.CARITAT_SHOW_ERRORS ? "inherit" : "ignore",
+      ],
       signal: ac.signal,
     });
     const stdout = cp.stdout.toArray();
