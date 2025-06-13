@@ -1,10 +1,10 @@
 import assert from "node:assert";
 import { it } from "node:test";
 
-import { generateAndSplitKeyPair } from "@node-core/caritat-crypto/generateSplitKeyPair";
-import reconstructPrivateKey from "@node-core/caritat-crypto/reconstructSplitKey";
-import decryptData from "@node-core/caritat-crypto/decrypt";
-import encryptData from "@node-core/caritat-crypto/encrypt";
+import { generateAndSplitKeyPair } from "../src/generateSplitKeyPair.ts";
+import reconstructPrivateKey from "../src/reconstructSplitKey.ts";
+import decryptData from "../src/decrypt.ts";
+import encryptData from "../src/encrypt.ts";
 
 it("should handle no secret splitting", async () => {
   const { shares, encryptedPrivateKey, publicKey } =

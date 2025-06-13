@@ -1,9 +1,9 @@
 import assert from "node:assert";
 import { it } from "node:test";
 
-import { generateRSAKeyPair } from "@node-core/caritat-crypto/generateSplitKeyPair";
-import encryptData from "@node-core/caritat-crypto/encrypt";
-import decryptData, { symmetricDecrypt } from "@node-core/caritat-crypto/decrypt";
+import { generateRSAKeyPair } from "../src/generateSplitKeyPair.ts";
+import encryptData from "../src/encrypt.ts";
+import decryptData, { symmetricDecrypt } from "../src/decrypt.ts";
 
 it("should generate a key pair alongside a secret", async () => {
   const obj = await generateRSAKeyPair();

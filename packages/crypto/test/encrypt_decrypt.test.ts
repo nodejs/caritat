@@ -3,8 +3,8 @@ import { strict as assert } from "node:assert";
 
 import * as fs from "node:fs";
 import * as crypto from "node:crypto";
-import encryptBallot from "@node-core/caritat-crypto/encrypt";
-import decryptBallot from "@node-core/caritat-crypto/decrypt";
+import encryptBallot from "../src/encrypt.ts";
+import decryptBallot from "../src/decrypt.ts";
 
 const fixturesURL = new URL("../../../test/fixtures/", import.meta.url);
 

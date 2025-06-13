@@ -1,5 +1,5 @@
-import { checkBallot, loadYmlFile } from "./parser.js";
-import type { BallotFileFormat, VoteFileFormat } from "./parser";
+import { checkBallot, loadYmlFile } from "./parser.ts";
+import type { BallotFileFormat, VoteFileFormat } from "./parser.ts";
 
 function main(argv: string[]): void {
   const ballotPath = argv[2];

@@ -10,11 +10,11 @@ import { getGPGSignGitFlag } from "./utils/gpgSign.js";
 
 import encryptData from "@node-core/caritat-crypto/encrypt";
 import {
-  BallotFileFormat,
+  type BallotFileFormat,
   loadYmlFile,
   parseYml,
   templateBallot,
-  VoteFileFormat,
+  type VoteFileFormat,
 } from "./parser.js";
 import {
   getSummarizedBallot,

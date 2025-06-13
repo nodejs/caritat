@@ -1,8 +1,8 @@
 import it from "node:test";
 import { strict as assert } from "node:assert";
 
-import SingleRound from "./SingleRoundResult.js";
-import type { Actor, Ballot } from "../vote.js";
+import SingleRound from "./SingleRoundResult.ts";
+import type { Actor, Ballot } from "../vote.ts";
 
 function singleRound(a: string[], b: Ballot[]) {
   return new SingleRound(null as Actor[], a, "subject", b, {}).result;

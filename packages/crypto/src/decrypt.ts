@@ -1,8 +1,8 @@
-import { ASYMMETRIC_ALGO, SYMMETRIC_ALGO } from "./config.js";
-import deriveKeyIv from "./deriveKeyIv.js";
-import importRsaKey from "./importRsaKey.js";
+import { ASYMMETRIC_ALGO, SYMMETRIC_ALGO } from "./config.ts";
+import deriveKeyIv from "./deriveKeyIv.ts";
+import importRsaKey from "./importRsaKey.ts";
 
-import { subtle } from "./webcrypto.js";
+import { subtle } from "./webcrypto.ts";
 
 export async function asymmetricDecrypt(
   ciphertext: BufferSource,

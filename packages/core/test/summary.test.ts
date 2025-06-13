@@ -1,7 +1,7 @@
 import it from "node:test";
 import { strict as assert } from "node:assert";
 
-import CondorcetSummary from "../src/summary/condorcetSummary.js";
+import CondorcetSummary from "../src/summary/condorcetSummary.ts";
 
 const participants = [{ id: "a" }, { id: "b" }, { id: "c" }];
 const winners = ["Option 2", "Option 3"];

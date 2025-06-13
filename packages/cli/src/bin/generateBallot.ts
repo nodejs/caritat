@@ -4,7 +4,7 @@ import parseArgs from "../utils/parseArgs.js";
 import {
   loadYmlFile,
   templateBallot,
-  VoteFileFormat,
+  type VoteFileFormat,
 } from "@node-core/caritat/parser";
 
 const parsedArgs = await parseArgs().options({

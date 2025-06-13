@@ -1,6 +1,6 @@
-import { ASYMMETRIC_ALGO } from "./config.js";
+import { ASYMMETRIC_ALGO } from "./config.ts";
 
-import { subtle } from "./webcrypto.js";
+import { subtle } from "./webcrypto.ts";
 
 const textDecoder = new TextDecoder();
 

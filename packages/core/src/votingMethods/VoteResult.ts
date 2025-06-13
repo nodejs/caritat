@@ -1,6 +1,6 @@
-import CondorcetElectionSummary from "../summary/condorcetSummary.js";
-import type { ElectionSummaryOptions } from "../summary/electionSummary.js";
-import type { Actor, Ballot, VoteCandidate } from "../vote.js";
+import CondorcetElectionSummary from "../summary/condorcetSummary.ts";
+import type { ElectionSummaryOptions } from "../summary/electionSummary.ts";
+import type { Actor, Ballot, VoteCandidate } from "../vote.ts";
 
 export type CandidateScores = Map<VoteCandidate, number>;
 
