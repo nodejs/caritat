@@ -11,21 +11,22 @@ export default class SingleRoundResult extends VoteResult {
     candidates: VoteCandidate[],
     subject: string,
     votes: Ballot[],
-    options: Partial<ElectionSummaryOptions>
+    options: Partial<ElectionSummaryOptions>,
   ) {
     super(authorizedVoters, candidates, subject, votes, options);
 
     this.#result = new Map(
-      candidates.map((candidate) => [
+      candidates.map(candidate => [
         candidate,
         votes.filter(
-          (ballot) =>
-            Math.max(...ballot.preferences.values()) ===
-            ballot.preferences.get(candidate)
+          ballot =>
+            Math.max(...ballot.preferences.values())
+            === ballot.preferences.get(candidate),
         ).length,
-      ])
+      ]),
     );
   }
+
   get result() {
     return this.#result;
   }

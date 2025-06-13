@@ -12,13 +12,13 @@ export default async function deriveKeyIv(
     secret,
     KEY_DERIVATION_ALGO.name,
     false,
-    ["deriveBits"]
+    ["deriveBits"],
   );
 
   const key_iv = await subtle.deriveBits(
     { ...KEY_DERIVATION_ALGO, salt },
     secretKey,
-    8 * (KEY_DERIVATION_ALGO.ivSize + KEY_DERIVATION_ALGO.keySize)
+    8 * (KEY_DERIVATION_ALGO.ivSize + KEY_DERIVATION_ALGO.keySize),
   );
 
   const key = await subtle.importKey(
@@ -26,7 +26,7 @@ export default async function deriveKeyIv(
     new Uint8Array(key_iv, 0, KEY_DERIVATION_ALGO.keySize),
     SYMMETRIC_ALGO,
     false,
-    usage
+    usage,
   );
   const iv = new Uint8Array(key_iv, KEY_DERIVATION_ALGO.keySize);
 

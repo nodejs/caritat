@@ -1,7 +1,7 @@
 import { stdin } from "process";
 
 export default function readStdIn<B extends boolean>(
-  isText: B = true as B
+  isText: B = true as B,
 ): Promise<B extends true ? string : Buffer> {
   const inputChunks = [];
 
@@ -15,7 +15,7 @@ export default function readStdIn<B extends boolean>(
   return new Promise((resolve, reject) => {
     stdin.on("end", () =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      resolve(isText ? inputChunks.join() : (Buffer.concat(inputChunks) as any))
+      resolve(isText ? inputChunks.join() : (Buffer.concat(inputChunks) as any)),
     );
     stdin.on("error", () => reject(new Error("error during read")));
     stdin.on("timeout", () => reject(new Error("timout during read")));

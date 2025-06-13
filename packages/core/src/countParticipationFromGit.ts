@@ -17,7 +17,7 @@ interface checkCommitArgs {
 async function getReasonToDiscardVoteFile(
   commit: VoteCommit,
   GIT_BIN: string,
-  cwd: string
+  cwd: string,
 ) {
   let data;
   try {
@@ -25,8 +25,8 @@ async function getReasonToDiscardVoteFile(
       await runChildProcessAsync(
         GIT_BIN,
         ["show", `${commit.sha}:${commit.files[0]}`],
-        { captureStdout: true, spawnArgs: { cwd } }
-      )
+        { captureStdout: true, spawnArgs: { cwd } },
+      ),
     );
   } catch (e) {
     return "invalid vote file: " + e.message;
@@ -75,7 +75,7 @@ export default async function countParticipation({
       "--format=///%H %G? %aN <%aE>",
       "--name-only",
     ],
-    spawnArgs
+    spawnArgs,
   );
   const validVoters = [];
   for await (const line of gitShow) {
@@ -84,9 +84,9 @@ export default async function countParticipation({
         if (currentCommit.sha === reportInvalidCommitsAfter) {
           shouldReport = false;
         }
-        const reason =
-          vote.reasonToDiscardCommit(currentCommit) ||
-          (await getReasonToDiscardVoteFile(currentCommit, GIT_BIN, cwd));
+        const reason
+          = vote.reasonToDiscardCommit(currentCommit)
+            || (await getReasonToDiscardVoteFile(currentCommit, GIT_BIN, cwd));
         if (reason == null) {
           validVoters.push(currentCommit.author);
           vote.addFakeBallot(currentCommit.author);
@@ -108,9 +108,9 @@ export default async function countParticipation({
     if (currentCommit.sha === reportInvalidCommitsAfter) {
       shouldReport = false;
     }
-    const reason =
-      vote.reasonToDiscardCommit(currentCommit) ||
-      (await getReasonToDiscardVoteFile(currentCommit, GIT_BIN, cwd));
+    const reason
+      = vote.reasonToDiscardCommit(currentCommit)
+        || (await getReasonToDiscardVoteFile(currentCommit, GIT_BIN, cwd));
     if (reason == null) {
       validVoters.push(currentCommit.author);
       vote.addFakeBallot(currentCommit.author);

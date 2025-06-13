@@ -22,14 +22,14 @@ it("should be able to decipher an encrypted message", async () => {
   const data = crypto.getRandomValues(new Uint32Array(8));
   const { encryptedSecret, saltedCiphertext } = await encryptData(
     data,
-    publicKey
+    publicKey,
   );
 
   const privateKey = await symmetricDecrypt(encryptedPrivateKey, secret);
   const result = await decryptData(
     saltedCiphertext,
     encryptedSecret,
-    privateKey
+    privateKey,
   );
 
   assert.deepStrictEqual(new Uint32Array(result), data);

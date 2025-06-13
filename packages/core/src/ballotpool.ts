@@ -1,6 +1,7 @@
 export class BallotPool {
-  public ballots: { [author: string]: { url: URL; index: number } } =
-    Object.create(null);
+  public ballots: { [author: string]: { url: URL; index: number } }
+    = Object.create(null);
+
   private authorizedVoters: string[];
 
   constructor(authorizedVoters?: string[]) {
@@ -9,10 +10,10 @@ export class BallotPool {
 
   public addBallot({ url, author }: { url: URL; author?: string }): boolean {
     if (
-      author != null &&
-      (author in this.ballots ||
-        (this.authorizedVoters != null &&
-          !this.authorizedVoters.includes(author)))
+      author != null
+      && (author in this.ballots
+        || (this.authorizedVoters != null
+          && !this.authorizedVoters.includes(author)))
     )
       return false;
     const index = 0;
@@ -47,12 +48,12 @@ export default class BallotPoolGit extends BallotPool {
     url: URL;
     commitSha: string;
   }): boolean {
-    const index = this.commits.findIndex((node) => node.sha === commitSha);
+    const index = this.commits.findIndex(node => node.sha === commitSha);
     if (index === -1) return false;
     const { author, isValid } = this.commits[index];
     if (
-      !isValid ||
-      (author in this.ballots && index > this.ballots[author].index)
+      !isValid
+      || (author in this.ballots && index > this.ballots[author].index)
     ) {
       return false;
     }

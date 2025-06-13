@@ -31,11 +31,11 @@ it("should be able to correctly decrypt what it has encrypted", async () => {
   const decryptedData = await decryptBallot(
     encryptedData.saltedCiphertext,
     encryptedData.encryptedSecret,
-    privateKey
+    privateKey,
   );
 
   assert.deepStrictEqual(
     Array.from(new Uint32Array(decryptedData)),
-    Array.from(new Uint32Array(rawData))
+    Array.from(new Uint32Array(rawData)),
   );
 });

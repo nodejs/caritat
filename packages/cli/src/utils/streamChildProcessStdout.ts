@@ -6,7 +6,7 @@ export default async function* streamChildProcessStdout(
   cmd: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any[] | readonly string[],
-  spawnArgs?: SpawnOptions
+  spawnArgs?: SpawnOptions,
 ) {
   const child = spawn(cmd, args, {
     stdio: ["inherit", "pipe", "inherit"],

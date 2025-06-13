@@ -18,7 +18,7 @@ if (yamlFile === "--help" || yamlFile === "-h") {
   console.log("Usage: extractEncryptedPrivateKey <path-to-YAML-file>");
   console.log("or");
   console.log(
-    "Usage: echo 'encryptedPrivateKey: …' | extractEncryptedPrivateKey"
+    "Usage: echo 'encryptedPrivateKey: …' | extractEncryptedPrivateKey",
   );
   process.exit();
 } else if (yamlFile == null) {

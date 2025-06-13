@@ -18,7 +18,7 @@ const MAGIC_NUMBER = [
 export async function symmetricEncrypt(rawData: BufferSource) {
   const secret = await subtle.exportKey(
     "raw",
-    await subtle.generateKey(SYMMETRIC_ALGO, true, ["encrypt"])
+    await subtle.generateKey(SYMMETRIC_ALGO, true, ["encrypt"]),
   );
   const salt = crypto.getRandomValues(new Uint8Array(SYMMETRIC_ALGO.saltSize));
 
@@ -26,17 +26,17 @@ export async function symmetricEncrypt(rawData: BufferSource) {
   const ciphertext = await subtle.encrypt(
     { ...SYMMETRIC_ALGO, iv },
     key,
-    rawData
+    rawData,
   );
 
   const saltedCiphertext = new Uint8Array(
-    MAGIC_NUMBER.length + SYMMETRIC_ALGO.saltSize + ciphertext.byteLength
+    MAGIC_NUMBER.length + SYMMETRIC_ALGO.saltSize + ciphertext.byteLength,
   );
   saltedCiphertext.set(MAGIC_NUMBER);
   saltedCiphertext.set(salt, MAGIC_NUMBER.length);
   saltedCiphertext.set(
     new Uint8Array(ciphertext),
-    MAGIC_NUMBER.length + SYMMETRIC_ALGO.saltSize
+    MAGIC_NUMBER.length + SYMMETRIC_ALGO.saltSize,
   );
 
   return { secret, saltedCiphertext };
@@ -44,7 +44,7 @@ export async function symmetricEncrypt(rawData: BufferSource) {
 
 export default async function encryptData(
   rawData: BufferSource,
-  publicKeyASCII: BufferSource | string
+  publicKeyASCII: BufferSource | string,
 ) {
   const publicKey = await importRsaKey(publicKeyASCII);
 
@@ -54,7 +54,7 @@ export default async function encryptData(
   const encryptedSecret = (await subtle.encrypt(
     { name: ASYMMETRIC_ALGO.name },
     publicKey,
-    secret
+    secret,
   )) as ArrayBuffer;
 
   return { encryptedSecret, saltedCiphertext };

@@ -9,6 +9,7 @@
     "url": "https://github.com/nodejs/caritat.git"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^4.4.1",
     "@types/eslint": "^9",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.0.0",

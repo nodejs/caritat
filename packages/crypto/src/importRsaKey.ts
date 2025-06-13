@@ -23,7 +23,7 @@ function isArmoredMessage(pem: BufferSource) {
   const firstBytes = new DataView(
     isView ? pem.buffer : pem,
     isView ? pem.byteOffset : 0,
-    armorStart.length
+    armorStart.length,
   );
   for (let i = 0; i < armorStart.length; i++) {
     if (armorStart.charCodeAt(i) !== firstBytes.getUint8(i)) return false;
@@ -34,7 +34,7 @@ function isArmoredMessage(pem: BufferSource) {
 function importKey(
   format: Exclude<KeyFormat, "jwk">,
   pem: BufferSource | string,
-  usage: KeyUsage[]
+  usage: KeyUsage[],
 ) {
   let binaryDer;
   if (
@@ -57,7 +57,7 @@ function importKey(
 
 export default function importRsaKey(
   pem: BufferSource | string,
-  isPrivate?: boolean
+  isPrivate?: boolean,
 ) {
   return importKey(isPrivate ? "pkcs8" : "spki", pem, [
     isPrivate ? "decrypt" : "encrypt",

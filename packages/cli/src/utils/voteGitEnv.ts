@@ -44,25 +44,25 @@ export async function getEnv(
     username?: string;
     email?: string;
     "gpg-sign"?: string | boolean;
-  }
+  },
 ) {
   const GIT_BIN = (parsedArgs["git-binary"] ?? env.GIT ?? "git") as string;
 
   const [EDITOR, username, emailAddress] = await Promise.all([
-    parsedArgs.editor ||
-      env.VISUAL ||
-      env.EDITOR ||
-      runChildProcessAsync(GIT_BIN, ["config", "--get", "core.editor"], {
-        captureStdout: true,
-      }).catch(() => (os.platform() === "win32" ? "notepad" : "vi")),
-    parsedArgs.username ||
-      runChildProcessAsync(GIT_BIN, ["config", "--get", "user.name"], {
-        captureStdout: true,
-      }),
-    parsedArgs.email ||
-      runChildProcessAsync(GIT_BIN, ["config", "--get", "user.email"], {
-        captureStdout: true,
-      }),
+    parsedArgs.editor
+    || env.VISUAL
+    || env.EDITOR
+    || runChildProcessAsync(GIT_BIN, ["config", "--get", "core.editor"], {
+      captureStdout: true,
+    }).catch(() => (os.platform() === "win32" ? "notepad" : "vi")),
+    parsedArgs.username
+    || runChildProcessAsync(GIT_BIN, ["config", "--get", "user.name"], {
+      captureStdout: true,
+    }),
+    parsedArgs.email
+    || runChildProcessAsync(GIT_BIN, ["config", "--get", "user.email"], {
+      captureStdout: true,
+    }),
   ]);
 
   return {

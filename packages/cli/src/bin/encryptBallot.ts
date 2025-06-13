@@ -24,12 +24,12 @@ const { file: filePath, key: publicKeyPath } = parsedArgs;
 
 const { encryptedSecret, saltedCiphertext } = await encryptData(
   fs.readFileSync(filePath),
-  fs.readFileSync(publicKeyPath)
+  fs.readFileSync(publicKeyPath),
 );
 
 console.log(
   JSON.stringify({
     encryptedSecret: Buffer.from(encryptedSecret).toString("base64"),
     data: Buffer.from(saltedCiphertext).toString("base64"),
-  })
+  }),
 );

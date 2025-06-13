@@ -27,7 +27,6 @@ export const cliArgs = {
     normalize: true,
     string: true as const,
   },
-  
 };
 
 export async function getEnv(parsedArgs: GitCliArgsType) {

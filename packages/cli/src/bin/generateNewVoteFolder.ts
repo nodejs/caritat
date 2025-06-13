@@ -104,8 +104,8 @@ const parsedArgs = await parseArgs().options({
 
 async function getCommitAuthor() {
   if (
-    (parsedArgs.username && !parsedArgs.email) ||
-    (!parsedArgs.username && parsedArgs.email)
+    (parsedArgs.username && !parsedArgs.email)
+    || (!parsedArgs.username && parsedArgs.email)
   ) {
     const { emailAddress, username } = await getEnv(parsedArgs);
     return `${username} <${emailAddress}>`;
@@ -125,8 +125,8 @@ await generateNewVoteFolder({
     const chars = await once(stdin, "data");
     stdin.pause();
     if (
-      chars[0][0] === 0x6e || // n
-      chars[0][0] === 0x4e // N
+      chars[0][0] === 0x6e // n
+      || chars[0][0] === 0x4e // N
     ) {
       console.log("Vote template file is ready for edit.");
       return true;

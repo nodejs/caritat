@@ -11,7 +11,7 @@ const parts = shamir.split(key.buffer, shareHolders, neededParts);
 it("should reconstruct single byte with enough shareholders", () => {
   const byte = key[0];
   const points = Array.from(
-    shamir.generatePoints(byte, shareHolders, neededParts)
+    shamir.generatePoints(byte, shareHolders, neededParts),
   );
   const reconstructed = shamir.reconstructByte(points);
   assert.strictEqual(reconstructed, byte);
@@ -21,7 +21,7 @@ it("should not give the whole key to any shareholders", () => {
   const byte = key[0];
 
   const points = Array.from(
-    shamir.generatePoints(byte, shareHolders, neededParts)
+    shamir.generatePoints(byte, shareHolders, neededParts),
   );
 
   let coincidences = 0;
@@ -46,7 +46,7 @@ it("should not generate keys if shareholders is greater than threshold", () => {
     {
       message:
         "Expected 256 <= 255. Cannot have more than shareholders the size of the Gallois field",
-    }
+    },
   );
 });
 
@@ -60,7 +60,7 @@ it("should not generate keys if less shareholders than needed parts", () => {
     {
       message:
         "Expected 10 < 25. Cannot have more less shareholders than needed parts",
-    }
+    },
   );
 });
 
@@ -79,7 +79,7 @@ it("should fail reconstruct key with duplicate shareholders", () => {
     () => {
       shamir.reconstruct([parts[1], parts[5], parts[1]]);
     },
-    { message: "Div/0" }
+    { message: "Div/0" },
   );
 });
 
@@ -104,5 +104,5 @@ it(
     assert.deepStrictEqual(reconstructed2, key);
 
     assert.ok(t2 >= t1);
-  }
+  },
 );
