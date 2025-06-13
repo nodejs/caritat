@@ -3,7 +3,7 @@ import crypto from "../webcrypto.js";
 /*
     The idea:
 
-We want to create a cryptographic key that no single party has control over. For example, we might need M people (called "shareholders" here)") to have parts of the key, 
+We want to create a cryptographic key that no single party has control over. For example, we might need M people (called "shareholders" here)") to have parts of the key,
 but we want to require only N (<=M) shareholders needed to be able to reconstruct the original key.
 
 To do that, the solution presented here consist on recursively splitting the key into a "tree" of sub-keys, with M branches at each depth level and N-1 depth levels.
@@ -19,28 +19,28 @@ every part is missing 4^2 - 3^2 = 7 characters (replaced with zeros)
 
 key part 0: 0000056709AB0DEF
                 root
-         /     |         |        \ 
-        X   / | | \   / | | \   / | | \  
+         /     |         |        \
+        X   / | | \   / | | \   / | | \
            X  O O  O X  O O  O X  O O  O
               5 6  7    9 A  B    D E  F
 
 key part 1: O023000080ABC0EF
                 root
-        /     |        |        \ 
-    / | | \  X     / | | \   / | | \  
+        /     |        |        \
+    / | | \  X     / | | \   / | | \
     O  X O  O      O  X O  O O  X O  O
     O    2  3      8    A  B C    E  F
 
-key part 2: O10345070000CD0F 
+key part 2: O10345070000CD0F
                     root
-        /         |     |       \ 
-    / | | \   / | | \  X      / | | \  
+        /         |     |       \
+    / | | \   / | | \  X      / | | \
     O  O X  O O  O X  O       O  O X  O
-    O  1    3 4  5    7       C  D    F 
+    O  1    3 4  5    7       C  D    F
 
 key part 3: O120456089A00000
                     root
-        /         |         |       \ 
+        /         |         |       \
     / | | \   / | | \   / | | \     X
     O  O O  X O  O O  X O  O O  X
     O  1 2    4  5 6    8  9 A
@@ -68,7 +68,7 @@ function redactKeyPart(
   maxDepth: number,
   keyLength: number = buffer.length,
   offset = 0,
-  depth = 1
+  depth = 1,
 ): void {
   if (depth > maxDepth) return;
   const subKeyLength = keyLength / shareHolders;
@@ -87,7 +87,7 @@ function redactKeyPart(
       buffer.fill(
         0,
         offset + subKeyLength * subKey,
-        offset + subKeyLength * (subKey + 1)
+        offset + subKeyLength * (subKey + 1),
       );
     } else {
       redactKeyPart(
@@ -97,7 +97,7 @@ function redactKeyPart(
         maxDepth,
         subKeyLength,
         offset + subKey * subKeyLength,
-        depth + 1
+        depth + 1,
       );
     }
   }
@@ -134,7 +134,7 @@ console.log(
   chunkSize * fmd,
   "bytes\t(Targeted: ",
   minimalEntropy,
-  "bytes)"
+  "bytes)",
 );
 console.log("Chunk count: ", chunkCount);
 

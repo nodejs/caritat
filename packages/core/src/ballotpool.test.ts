@@ -19,7 +19,7 @@ it("should add ballot without problem", () => {
   const pool = new BallotPoolGit(commitTree);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "0" }),
-    true
+    true,
   );
 });
 
@@ -27,11 +27,11 @@ it("should fail to add ballot with invalid sha", () => {
   const pool = new BallotPoolGit(commitTree);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "-1" }),
-    false
+    false,
   );
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "" }),
-    false
+    false,
   );
 });
 
@@ -39,11 +39,11 @@ it("should manage to add newer ballot with same author", () => {
   const pool = new BallotPoolGit(commitTree);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "3" }),
-    true
+    true,
   );
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "2" }),
-    true
+    true,
   );
 });
 
@@ -51,11 +51,11 @@ it("should fail to add older ballot with same author", () => {
   const pool = new BallotPoolGit(commitTree);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "2" }),
-    true
+    true,
   );
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "3" }),
-    false
+    false,
   );
 });
 
@@ -63,7 +63,7 @@ it("should refuse invalid commits", () => {
   const pool = new BallotPoolGit(commitTree);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "4" }),
-    false
+    false,
   );
 });
 
@@ -71,14 +71,14 @@ it("should accept only the authorized voters", () => {
   const pool = new BallotPoolGit(commitTree, ["riri", "fifi"]);
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "0" }),
-    true
+    true,
   );
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "1" }),
-    true
+    true,
   );
   assert.strictEqual(
     pool.addBallot({ url: fixturesURL, commitSha: "2" }),
-    false
+    false,
   );
 });

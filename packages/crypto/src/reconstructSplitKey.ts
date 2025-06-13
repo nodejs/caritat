@@ -4,7 +4,7 @@ import * as shamir from "./shamir.js";
 export default async function reconstructPrivateKey(
   encryptedPrivateKey: BufferSource,
   shares: BufferSource[],
-  threshold?: number
+  threshold?: number,
 ) {
   if (!shares?.length) throw new Error("No shares provided");
   if ((threshold ?? shares.length) === 1) {

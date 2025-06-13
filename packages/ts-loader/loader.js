@@ -29,24 +29,24 @@ for await (const fsEntry of await opendir(ROOT_DIR)) {
   if (fsEntry.isDirectory()) {
     const localPackagePackageJsonURL = new URL(
       `./${fsEntry.name}/package.json`,
-      ROOT_DIR
+      ROOT_DIR,
     );
     try {
       const { name, exports, dependencies } = JSON.parse(
-        await readFile(localPackagePackageJsonURL, "utf-8")
+        await readFile(localPackagePackageJsonURL, "utf-8"),
       );
       if (!name) continue;
       if (exports) {
         for (const [exportedPath, url] of Object.entries(exports)) {
           localPackagesURLs[exportedPath.replace(".", () => name)] = new URL(
             url.replace(/\/dist\/(.+)\.js$/, "/src/$1.ts"),
-            localPackagePackageJsonURL
+            localPackagePackageJsonURL,
           ).href;
         }
       }
       packagesDirLocalDeps[fsEntry.name] = dependencies
-        ? Object.keys(dependencies).filter((name) =>
-            dependencies[name].startsWith("workspace:")
+        ? Object.keys(dependencies).filter(name =>
+            dependencies[name].startsWith("workspace:"),
           )
         : [];
       // To make self-reference work:
@@ -62,16 +62,16 @@ const localModuleURLPattern = /\/packages\/([^/]+)\//;
 export async function resolve(urlStr, context, next) {
   if (context.parentURL?.startsWith(ROOT_DIR) && urlStr in localPackagesURLs) {
     const parentURLPackageDirName = localModuleURLPattern.exec(
-      context.parentURL
+      context.parentURL,
     );
     if (
-      parentURLPackageDirName != null &&
-      packagesDirLocalDeps[parentURLPackageDirName[1]]?.every(
-        (depName) => !urlStr.startsWith(depName)
+      parentURLPackageDirName != null
+      && packagesDirLocalDeps[parentURLPackageDirName[1]]?.every(
+        depName => !urlStr.startsWith(depName),
       )
     ) {
       throw new Error(
-        `${context.parentURL} tried to import ${urlStr}, which correspond to the local module ${localPackagesURLs[urlStr]}, but it is not listed in its dependencies`
+        `${context.parentURL} tried to import ${urlStr}, which correspond to the local module ${localPackagesURLs[urlStr]}, but it is not listed in its dependencies`,
       );
     }
     urlStr = localPackagesURLs[urlStr];

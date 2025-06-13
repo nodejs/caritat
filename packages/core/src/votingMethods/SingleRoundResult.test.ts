@@ -22,7 +22,7 @@ it("should return a map for a vote", () => {
         voter: { id: "b" },
         preferences: new Map([["a", 1]]),
       },
-    ]
+    ],
   );
 
   assert.deepStrictEqual([...result], [["a", 1]]);
@@ -36,13 +36,13 @@ it("should return a map for a vote", () => {
             voter: { id: "b" },
             preferences: new Map([["a", 1]]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 1],
       ["b", 0],
-    ]
+    ],
   );
 });
 
@@ -58,7 +58,7 @@ it("should return a map for two votes", () => {
         voter: { id: "c" },
         preferences: new Map([["a", 1]]),
       },
-    ]
+    ],
   );
 
   assert.deepStrictEqual([...result], [["a", 2]]);
