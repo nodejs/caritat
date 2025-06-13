@@ -19,7 +19,8 @@
   "scripts": {
     "test:lint": "eslint .",
     "test:types": "tsc --noEmit",
-    "test:unit": "node --experimental-global-webcrypto --experimental-strip-types test/index.ts",
+    "test:unit": "node --test --experimental-global-webcrypto --experimental-strip-types",
+    "test:coverage": "node --test --experimental-global-webcrypto --experimental-strip-types --experimental-test-coverage",
     "test": "yarn test:lint && yarn test:types && yarn test:unit",
     "build": "tsc --build",
     "deploy:cli": "rm -rf packages/cli/dist && tsc --build --force && cp README.md packages/cli/. && yarn workspace @node-core/caritat-cli npm publish --access public",
