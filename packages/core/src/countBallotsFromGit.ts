@@ -233,7 +233,7 @@ export default async function countFromGit({
 
   await Promise.all(decryptPromises);
 
-  const result = vote.count({ discardedCommits });
+  const result = vote.count({ discardedCommits, keepOnlyFirstLineInSummary: vote.voteFileData.keepOnlyFirstLineInSummary });
 
   if (commitJsonSummary != null) {
     if (lastCommitRef !== "HEAD") {
