@@ -1,8 +1,8 @@
-import { ASYMMETRIC_ALGO, SYMMETRIC_ALGO } from "./config.js";
-import deriveKeyIv from "./deriveKeyIv.js";
-import importRsaKey from "./importRsaKey.js";
+import { ASYMMETRIC_ALGO, SYMMETRIC_ALGO } from "./config.ts";
+import deriveKeyIv from "./deriveKeyIv.ts";
+import importRsaKey from "./importRsaKey.ts";
 
-import crypto, { subtle } from "./webcrypto.js";
+import crypto, { subtle } from "./webcrypto.ts";
 
 const MAGIC_NUMBER = [
   83, // 'S'

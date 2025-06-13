@@ -1,6 +1,6 @@
-import type { Actor, Ballot, VoteCandidate, VoteCommit } from "../vote";
-import type { CandidateScores } from "../votingMethods/VotingMethodImplementation";
-import cleanMarkdown from "../utils/cleanMarkdown.js";
+import type { Actor, Ballot, VoteCandidate, VoteCommit } from "../vote.ts";
+import type { CandidateScores } from "../votingMethods/VotingMethodImplementation.ts";
+import cleanMarkdown from "../utils/cleanMarkdown.ts";
 
 function displayWinners(winners: VoteCandidate[]) {
   if (winners.length === 0) return "None.";

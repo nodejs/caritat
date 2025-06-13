@@ -1,8 +1,8 @@
-import { ASYMMETRIC_ALGO } from "./config.js";
+import { ASYMMETRIC_ALGO } from "./config.ts";
 
-import { symmetricEncrypt } from "./encrypt.js";
-import crypto from "./webcrypto.js";
-import * as shamir from "./shamir.js";
+import { symmetricEncrypt } from "./encrypt.ts";
+import crypto from "./webcrypto.ts";
+import * as shamir from "./shamir.ts";
 
 export async function generateRSAKeyPair() {
   const { privateKey, publicKey } = await crypto.subtle.generateKey(

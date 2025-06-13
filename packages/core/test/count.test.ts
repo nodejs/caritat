@@ -1,9 +1,9 @@
 import it from "node:test";
 import { strict as assert } from "node:assert";
 
-import { BallotPool } from "../src/ballotpool.js";
-import { loadYmlFile } from "../src/parser.js";
-import type { VoteFileFormat } from "../src/parser";
+import { BallotPool } from "../src/ballotpool.ts";
+import { loadYmlFile } from "../src/parser.ts";
+import type { VoteFileFormat } from "../src/parser.ts";
 
 const fixturesURL = new URL("../../../test/fixtures/", import.meta.url);
 

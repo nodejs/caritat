@@ -3,7 +3,7 @@
 import { once } from "node:events";
 import { stdin, stdout } from "node:process";
 
-import type { VoteMethod } from "@node-core/caritat/vote.js";
+import type { VoteMethod } from "@node-core/caritat/vote.ts";
 import generateNewVoteFolder from "@node-core/caritat/generateNewVoteFolder";
 import parseArgs from "../utils/parseArgs.js";
 import { getEnv, cliArgs } from "../utils/voteGitEnv.js";

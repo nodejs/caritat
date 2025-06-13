@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 
-import CondorcetVote from "./CondorcetResult.js";
-import type { Actor } from "src/vote.js";
+import CondorcetVote from "./CondorcetResult.ts";
+import type { Actor } from "src/vote.ts";
 
 function condorcet(a, b) {
   return new CondorcetVote(null as Actor[], a, "subject", b, {}).result;

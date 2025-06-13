@@ -1,6 +1,7 @@
-import * as shamir from "../src/shamir.js";
 import { it } from "node:test";
 import { strict as assert } from "node:assert";
+
+import * as shamir from "../src/shamir.ts";
 
 const key = crypto.getRandomValues(new Uint8Array(256));
 const shareHolders = 36;

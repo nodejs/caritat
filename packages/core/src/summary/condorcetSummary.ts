@@ -1,6 +1,6 @@
-import { Ballot, VoteCandidate } from "../vote";
-import cleanMarkdown from "../utils/cleanMarkdown.js";
-import ElectionSummary from "./electionSummary.js";
+import type { Ballot, VoteCandidate } from "../vote.ts";
+import cleanMarkdown from "../utils/cleanMarkdown.ts";
+import ElectionSummary from "./electionSummary.ts";
 
 const formatter = new Intl.ListFormat("en", {
   style: "long",

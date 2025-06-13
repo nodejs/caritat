@@ -9,11 +9,7 @@
       "moduleResolution": "node",
       "watch": true,
       "rootDir": "../..",
-      "baseUrl": "..",
-      "paths": {
-        "@node-core/caritat/*": ["../core/src/*"],
-        "@node-core/caritat-crypto/*": ["../crypto/src/*"]
-      }
+      "baseUrl": ".."
     },
     "include": ["./*.ts"],
     "references": [{ "path": "../../.." }]

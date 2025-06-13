@@ -1,6 +1,6 @@
-import { KEY_DERIVATION_ALGO, SYMMETRIC_ALGO } from "./config.js";
+import { KEY_DERIVATION_ALGO, SYMMETRIC_ALGO } from "./config.ts";
 
-import { subtle } from "./webcrypto.js";
+import { subtle } from "./webcrypto.ts";
 
 export default async function deriveKeyIv(
   secret: BufferSource,

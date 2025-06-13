@@ -1,9 +1,9 @@
 import it from "node:test";
 import { strict as assert } from "node:assert";
 
-import { VoteCandidate } from "../src/vote.js";
-import VoteResult from "../src/votingMethods/VoteResult.js";
-import type { CandidateScores } from "../src/votingMethods/VoteResult";
+import type { VoteCandidate } from "../src/vote.ts";
+import VoteResult from "../src/votingMethods/VoteResult.ts";
+import type { CandidateScores } from "../src/votingMethods/VoteResult.ts";
 
 function findWinners(
   result: CandidateScores

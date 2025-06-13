@@ -8,10 +8,10 @@ import { env } from "node:process";
 
 import * as yaml from "js-yaml";
 
-import { generateAndSplitKeyPair } from "@node-core/caritat-crypto/generateSplitKeyPair";
-import { loadYmlString, templateBallot, VoteFileFormat } from "./parser.js";
-import runChildProcessAsync from "./utils/runChildProcessAsync.js";
-import type { VoteMethod } from "./vote.js";
+import { generateAndSplitKeyPair } from "@node-core/caritat-crypto/generateSplitKeyPair.ts";
+import { loadYmlString, templateBallot, VoteFileFormat } from "./parser.ts";
+import runChildProcessAsync from "./utils/runChildProcessAsync.ts";
+import type { VoteMethod } from "./vote.ts";
 
 interface Options {
   askForConfirmation?: (ballotContent: string) => boolean | Promise<boolean>;

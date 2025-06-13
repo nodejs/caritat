@@ -1,5 +1,5 @@
-import { symmetricDecrypt } from "./decrypt.js";
-import * as shamir from "./shamir.js";
+import { symmetricDecrypt } from "./decrypt.ts";
+import * as shamir from "./shamir.ts";
 
 export default async function reconstructPrivateKey(
   encryptedPrivateKey: BufferSource,

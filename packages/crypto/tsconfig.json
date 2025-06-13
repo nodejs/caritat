@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "declaration": true,
     "composite": true,
     "target": "ESNext",
     "module": "ESNext",
     "outDir": "./dist",
-    "moduleResolution": "node",
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
