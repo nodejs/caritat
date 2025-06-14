@@ -27,6 +27,9 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
 
@@ -55,6 +58,6 @@ jobs:
         run: |
           corepack yarn install --immutable
           corepack yarn build
-          corepack yarn workspaces foreach --all --no-private npm publish --access public
+          corepack yarn workspaces foreach --all --no-private npm publish --provenance --access public
         env:
           YARN_NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
