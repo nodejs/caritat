@@ -1,7 +1,6 @@
 import { readFile, opendir } from "node:fs/promises";
-import { URL, fileURLToPath } from "node:url";
-
-import { transform } from "sucrase";
+import process from "node:process";
+import { URL } from "node:url";
 
 /**
  * Maps all the possible import specifier to the absolute URL of the source file.
@@ -95,18 +94,11 @@ export async function resolve(urlStr, context, next) {
 }
 
 export async function load(urlStr, context, next) {
-  const url = new URL(urlStr);
-  if (url.pathname.endsWith(".ts")) {
-    const { source } = await next(urlStr, { ...context, format: "module" });
-    return {
-      source: transform(source.toString("utf-8"), {
-        transforms: ["typescript"],
-        disableESTransforms: true,
-        filePath: fileURLToPath(url),
-      }).code,
-      format: "module",
-    };
-  } else {
-    return next(urlStr, context);
+  if (!process.features.typescript) {
+    const url = new URL(urlStr);
+    if (url.pathname.endsWith(".ts")) {
+      context = { ...context, format: "module-typescript" };
+    }
   }
+  return next(urlStr, context);
 }

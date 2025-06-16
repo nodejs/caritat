@@ -2,8 +2,5 @@
   "name": "@node-core/caritat-ts-loader",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "dependencies": {
-    "sucrase": "^3.0.0"
-  }
+  "type": "module"
 }
