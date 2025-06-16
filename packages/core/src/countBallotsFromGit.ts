@@ -12,7 +12,7 @@ import decryptData from "@node-core/caritat-crypto/decrypt";
 import reconstructSplitKey from "@node-core/caritat-crypto/reconstructSplitKey";
 import type { VoteCommit } from "./vote.js";
 import Vote from "./vote.js";
-import { DiscardedCommit } from "./summary/electionSummary.js";
+import type { DiscardedCommit } from "./summary/electionSummary.js";
 import type VoteResult from "./votingMethods/VoteResult.js";
 import { getGPGSignGitFlag } from "./utils/gpgSign.js";
 

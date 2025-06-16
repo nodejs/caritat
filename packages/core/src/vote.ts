@@ -1,17 +1,17 @@
 import {
-  BallotFileFormat,
+  type BallotFileFormat,
   checkBallot,
   loadYmlFile,
   loadYmlString,
   parseYml,
-  VoteFileFormat,
+  type VoteFileFormat,
 } from "./parser.js";
 import type { PathOrFileDescriptor } from "fs";
 import type { CandidateScores } from "./votingMethods/VotingMethodImplementation.js";
 import VoteResult from "./votingMethods/VoteResult.js";
 import CondorcetResult from "./votingMethods/CondorcetResult.js";
 import SingleRoundResult from "./votingMethods/SingleRoundResult.js";
-import { ElectionSummaryOptions } from "./summary/electionSummary.js";
+import type { ElectionSummaryOptions } from "./summary/electionSummary.js";
 
 export interface Actor {
   id: string;
