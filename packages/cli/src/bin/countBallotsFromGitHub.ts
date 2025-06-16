@@ -19,9 +19,9 @@ const parsedArgs = await parseArgs()
 
     protocol: {
       describe:
-        "the protocol to use to pull the remote repository, either SSH or " +
-        "HTTP (defaults to SSH if a public SSH key is found for the current " +
-        "user, otherwise default to HTTP)",
+        "the protocol to use to pull the remote repository, either SSH or "
+        + "HTTP (defaults to SSH if a public SSH key is found for the current "
+        + "user, otherwise default to HTTP)",
       string: true,
     },
     login: {
@@ -50,8 +50,8 @@ const parsedArgs = await parseArgs()
     ["key-part"]: {
       ...cliArgs["key-part"],
       describe:
-        cliArgs["key-part"].describe +
-        " If not provided, it will be extracted from the PR comments.",
+        cliArgs["key-part"].describe
+        + " If not provided, it will be extracted from the PR comments.",
     },
   })
   .command(
@@ -63,16 +63,16 @@ const parsedArgs = await parseArgs()
         type: "string",
         describe: "URL to the GitHub pull request",
       });
-    }
+    },
   ).argv;
 
-const privateKey =
-  parsedArgs.key === "-"
+const privateKey
+  = parsedArgs.key === "-"
     ? await readStdIn(false)
     : parsedArgs.key && (await fs.readFile(parsedArgs.key));
 
 const prUrlInfo = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)$/.exec(
-  parsedArgs["pr-url"] as string
+  parsedArgs["pr-url"] as string,
 );
 
 if (prUrlInfo == null) {
@@ -81,7 +81,7 @@ if (prUrlInfo == null) {
 
 const [, owner, repo, prNumber] = prUrlInfo;
 console.warn(
-  `Looking into GitHub pull request ${owner}/${repo}#${prNumber}...`
+  `Looking into GitHub pull request ${owner}/${repo}#${prNumber}...`,
 );
 
 const query = `query PR($prid: Int!, $owner: String!, $repo: String!) {
@@ -126,8 +126,8 @@ const { data } = JSON.parse(
       "-f",
       `query=${query}`,
     ],
-    { captureStdout: true }
-  )
+    { captureStdout: true },
+  ),
 );
 
 const { pullRequest } = data.repository;
@@ -154,31 +154,31 @@ const files = await runChildProcessAsync(
     "--jq",
     ".files.[] | .filename",
   ],
-  { captureStdout: true }
+  { captureStdout: true },
 );
 
 const voteFileCanonicalName = "vote.yml";
 const subPath = files
   .split("\n")
   .find(
-    (path) =>
-      path === voteFileCanonicalName ||
-      path.endsWith(`/${voteFileCanonicalName}`)
+    path =>
+      path === voteFileCanonicalName
+      || path.endsWith(`/${voteFileCanonicalName}`),
   )
   ?.slice(0, -voteFileCanonicalName.length);
 
 const handle = parsedArgs.login || data.viewer.login;
 
-const protocol =
-  parsedArgs.protocol ?? (data.viewer.publicKeys.totalCount ? "ssh" : "http");
+const protocol
+  = parsedArgs.protocol ?? (data.viewer.publicKeys.totalCount ? "ssh" : "http");
 
 function getHTTPRepoURL(repoURL: string, login: string) {
   const url = new URL(repoURL + ".git");
   url.username = login;
   return url.toString();
 }
-const repoURL =
-  protocol === "ssh"
+const repoURL
+  = protocol === "ssh"
     ? data.repository.sshUrl
     : getHTTPRepoURL(data.repository.url, handle);
 
@@ -191,14 +191,14 @@ console.warn("All relevant information has been retrieved:", {
 });
 
 async function getKeyPartsFromComments() {
-  const shamirKeyPartComment =
-    /\n-----BEGIN SHAMIR KEY PART-----\n([a-zA-Z0-9+/\s]+={0,2})\n-----END SHAMIR KEY PART-----\n/;
+  const shamirKeyPartComment
+    = /\n-----BEGIN SHAMIR KEY PART-----\n([a-zA-Z0-9+/\s]+={0,2})\n-----END SHAMIR KEY PART-----\n/;
   const { comments } = JSON.parse(
     await runChildProcessAsync(
       parsedArgs["gh-binary"] as string,
       ["pr", "view", parsedArgs["pr-url"], "--json", "comments"],
-      { captureStdout: true }
-    )
+      { captureStdout: true },
+    ),
   );
 
   const results = [];
@@ -237,12 +237,12 @@ if (parsedArgs["post-comment"]) {
   ]);
 } else {
   console.log(
-    "To publish the results, you should use `--post-comment --commit-json-summary` CLI flags."
+    "To publish the results, you should use `--post-comment --commit-json-summary` CLI flags.",
   );
   console.log(
     "Participation:",
     Math.round(summary.participation * 100_00) / 1_00,
-    "%"
+    "%",
   );
   console.log("Raw results:", summary.result);
 }

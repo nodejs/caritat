@@ -31,7 +31,7 @@ export default async function reasonToDiscardCommit({
       "--format=///%H %G? %aN <%aE>",
       "--name-only",
     ],
-    spawnArgs
+    spawnArgs,
   );
   let currentCommit: VoteCommit;
   for await (const line of gitShow) {

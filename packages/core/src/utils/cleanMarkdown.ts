@@ -17,10 +17,10 @@ export default function cleanMarkdown(txt: string): string {
   for (let i = 0; i < backtickSplit.length; i++) {
     const isInsideBacktickString = i % 2;
     cleanMdString += isInsideBacktickString
-      ? // No escaping inside a code span.
-        `\`${backtickSplit[i]}\``
-      : // otherwise escape _~*\[]<>
-        backtickSplit[i].replace(/([_~*\\[\]<>])/g, "\\$1");
+      // No escaping inside a code span.
+      ? `\`${backtickSplit[i]}\``
+      // otherwise escape _~*\[]<>
+      : backtickSplit[i].replace(/([_~*\\[\]<>])/g, "\\$1");
   }
   return cleanMdString;
 }

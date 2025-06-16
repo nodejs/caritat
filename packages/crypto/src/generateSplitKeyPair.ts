@@ -12,10 +12,10 @@ export async function generateRSAKeyPair() {
       publicExponent: new Uint8Array([1, 0, 1]),
     },
     true,
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
-  const [{ saltedCiphertext: encryptedPrivateKey, secret }, rawPublicKey] =
-    await Promise.all([
+  const [{ saltedCiphertext: encryptedPrivateKey, secret }, rawPublicKey]
+    = await Promise.all([
       crypto.subtle.exportKey("pkcs8", privateKey).then(symmetricEncrypt),
       crypto.subtle.exportKey("spki", publicKey),
     ]);
@@ -28,7 +28,7 @@ export async function generateRSAKeyPair() {
 
 export async function generateAndSplitKeyPair(
   shareHolders: number,
-  threshold: number
+  threshold: number,
 ) {
   const { encryptedPrivateKey, publicKey, secret } = await generateRSAKeyPair();
   if (threshold === 1) {
