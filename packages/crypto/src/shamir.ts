@@ -85,12 +85,12 @@ const subtractPolynomials = addPolynomials;
 export function* generatePoints(secret: u8, shareHolders: u8, neededParts: u8) {
   if (shareHolders > MAX_VALUE)
     throw new RangeError(
-      `Expected ${shareHolders} <= ${MAX_VALUE}. Cannot have more than ` +
-        `shareholders the size of the Gallois field`
+      `Expected ${shareHolders} <= ${MAX_VALUE}. Cannot have more than `
+      + `shareholders the size of the Gallois field`,
     );
   if (shareHolders < neededParts)
     throw new RangeError(
-      `Expected ${shareHolders} < ${neededParts}. Cannot have more less shareholders than needed parts`
+      `Expected ${shareHolders} < ${neededParts}. Cannot have more less shareholders than needed parts`,
     );
   // Generate neededParts-1 random polynomial coefficients in GF(2^8)
   const coefficients = crypto.getRandomValues(new Uint8Array(neededParts - 1));
@@ -114,7 +114,7 @@ export function* generatePoints(secret: u8, shareHolders: u8, neededParts: u8) {
  */
 export function reconstructByte(
   points: { x: u8; y: u8 }[],
-  neededParts: u8 = points.length
+  neededParts: u8 = points.length,
 ): u8 {
   let Σ = 0;
   for (let j = 0; j < neededParts; j++) {
@@ -128,7 +128,7 @@ export function reconstructByte(
       const { x } = points[i];
       Π = multiplyPolynomials(
         Π,
-        dividePolynomials(x, subtractPolynomials(xj, x))
+        dividePolynomials(x, subtractPolynomials(xj, x)),
       );
       // Π *= (x0-x)/(xj-x)
       // d(X) = (X-x)/(xj-x) is the only line passing through (xj,1) and (x,0)
@@ -153,21 +153,21 @@ export function reconstructByte(
 export function split(
   data: BufferSource,
   shareHolders: u8,
-  neededParts: u8
+  neededParts: u8,
 ): Uint8Array[] {
   const isView = ArrayBuffer.isView(data);
   const length = data.byteLength;
   const rawDataView = new DataView(
     isView ? data.buffer : data,
     isView ? data.byteOffset : 0,
-    length
+    length,
   );
 
   const points = Array.from({ length }, (_, i) =>
     // Always use GF(2^8), so each chunk needs to be 8 bit long
     Array.from(
-      generatePoints(rawDataView.getUint8(i), shareHolders, neededParts)
-    )
+      generatePoints(rawDataView.getUint8(i), shareHolders, neededParts),
+    ),
   );
   return Array.from({ length: shareHolders }, (_, i) => {
     const part = new Uint8Array(1 + length); // The +1 here is because we need
@@ -189,22 +189,22 @@ export function split(
  */
 export function reconstruct(
   parts: BufferSource[],
-  neededParts: u8 = parts.length
+  neededParts: u8 = parts.length,
 ): Uint8Array {
   if (parts.length < neededParts)
     throw new Error("Not enough parts to reconstruct key");
   const bytes = parts[0].byteLength - 1;
   const result = new Uint8Array(bytes);
-  const dataViews = parts.map((part) =>
+  const dataViews = parts.map(part =>
     ArrayBuffer.isView(part)
       ? new DataView(part.buffer, part.byteOffset, bytes + 1)
-      : new DataView(part)
+      : new DataView(part),
   );
   for (let i = 0; i < bytes; i++) {
     result[i] = reconstructByte(
       Array.from({ length: neededParts }, (_, j) => {
         return { x: dataViews[j].getUint8(bytes), y: dataViews[j].getUint8(i) };
-      })
+      }),
     );
   }
 

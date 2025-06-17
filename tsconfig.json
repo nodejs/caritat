@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true
+    "target": "esnext",
+    "module": "nodenext",
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
   },
   "files": [],
   "references": [{ "path": "./packages/cli" }],

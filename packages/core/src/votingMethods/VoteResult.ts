@@ -17,7 +17,7 @@ export default abstract class VoteResult {
     candidates: VoteCandidate[],
     subject: string,
     votes: Ballot[],
-    options: Partial<ElectionSummaryOptions>
+    options: Partial<ElectionSummaryOptions>,
   ) {
     this.#authorizedVoters = authorizedVoters;
     this.#subject = subject;
@@ -25,7 +25,7 @@ export default abstract class VoteResult {
     this.#options = options;
   }
 
-  *findWinners(): Generator<VoteCandidate, void, unknown> {
+  * findWinners(): Generator<VoteCandidate, void, unknown> {
     const maxScore = Math.max(...this.result.values());
     for (const [candidate, score] of this.result) {
       if (score === maxScore) yield candidate;
@@ -41,14 +41,14 @@ export default abstract class VoteResult {
   get missingVoices(): Actor["id"][] {
     return this.#authorizedVoters
       .filter(
-        (voter) => !this.#votes.some((ballot) => ballot.voter.id === voter.id),
+        voter => !this.#votes.some(ballot => ballot.voter.id === voter.id),
       )
-      .map((potentialVoter) => potentialVoter.id);
+      .map(potentialVoter => potentialVoter.id);
   }
 
   public generateSummary(
     privateKey: string,
-    options?: Partial<ElectionSummaryOptions>
+    options?: Partial<ElectionSummaryOptions>,
   ) {
     if (this.result == null) {
       throw new Error("Can't summarize vote that hasn't been counted yet.");
@@ -71,10 +71,10 @@ export default abstract class VoteResult {
 
   public toJSON() {
     const votes = Object.fromEntries(
-      this.#votes.map((ballot) => [
+      this.#votes.map(ballot => [
         ballot.voter.id,
         Object.fromEntries(ballot.preferences),
-      ])
+      ]),
     );
     return {
       description: this.#subject,

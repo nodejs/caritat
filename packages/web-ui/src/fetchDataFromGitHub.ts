@@ -7,24 +7,24 @@ const fetch2JSON = (response: Awaited<ReturnType<typeof fetch>>) =>
     : Promise.reject(
         new Error(`Fetch error: ${response.status} ${response.statusText}`, {
           cause: response,
-        })
+        }),
       );
 
 const branchInfoCache = new Map();
 async function fetchVoteFilesInfo(
   url: string | URL,
-  fetchOptions: Parameters<typeof fetch>[1]
+  fetchOptions: Parameters<typeof fetch>[1],
 ) {
   const prUrl = new URL(url as string);
   if (prUrl.origin !== "https://github.com") {
     throw new Error(
-      "Only GitHub PR URLs are supported on the web UI. Use the CLI instead."
+      "Only GitHub PR URLs are supported on the web UI. Use the CLI instead.",
     );
   }
   const prUrlMatch = githubPRUrlPattern.exec(prUrl.pathname);
   if (prUrlMatch == null) {
     throw new Error(
-      "Only GitHub PR URLs are supported on the web UI. Use the CLI instead."
+      "Only GitHub PR URLs are supported on the web UI. Use the CLI instead.",
     );
   }
   const [, owner, repo, number] = prUrlMatch;
@@ -71,11 +71,11 @@ async function fetchVoteFilesInfo(
     const restData = await Promise.all([
       fetch(
         `https://api.github.com/repos/${owner}/${repo}/pulls/${number}`,
-        fetchOptions
+        fetchOptions,
       ).then(fetch2JSON),
       fetch(
         `https://api.github.com/repos/${owner}/${repo}/pulls/${number}/commits?per_page=1`,
-        fetchOptions
+        fetchOptions,
       ).then(fetch2JSON),
     ]);
 
@@ -108,7 +108,7 @@ async function fetchVoteFilesInfo(
 
   const { files } = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/commits/${initVoteCommit}`,
-    fetchOptions
+    fetchOptions,
   ).then(fetch2JSON);
 
   if (files?.length !== 3) {
@@ -116,18 +116,18 @@ async function fetchVoteFilesInfo(
   }
 
   const voteFile = files.find(
-    (file) =>
-      file.filename === "vote.yml" || file.filename.endsWith("/vote.yml")
+    file =>
+      file.filename === "vote.yml" || file.filename.endsWith("/vote.yml"),
   );
   const ballotFile = files.find(
-    (file) =>
-      file.filename ===
-      voteFile.filename.slice(0, -"vote.yml".length) + "ballot.yml"
+    file =>
+      file.filename
+      === voteFile.filename.slice(0, -"vote.yml".length) + "ballot.yml",
   );
   const publicKeyFile = files.find(
-    (file) =>
-      file.filename ===
-      voteFile.filename.slice(0, -"vote.yml".length) + "public.pem"
+    file =>
+      file.filename
+      === voteFile.filename.slice(0, -"vote.yml".length) + "public.pem",
   );
 
   if (!voteFile || !ballotFile || !publicKeyFile) {
@@ -140,8 +140,8 @@ async function fetchVoteFilesInfo(
     // vote.yml file is "cleaner".
     `${headRefURL}/new/${headRefName}/${voteFile.filename.replace(
       /vote\.yml$/,
-      ""
-    )}`
+      "",
+    )}`,
   );
 
   return { voteFile, ballotFile, publicKeyFile };
@@ -151,7 +151,7 @@ export function fetchNewVoteFileURL(url: string | URL) {
   return branchInfoCache.get(url);
 }
 
-/*** Fisher-Yates shuffle */
+/** * Fisher-Yates shuffle */
 function shuffle<T>(array: Array<T>): Array<T> {
   let currentIndex = array.length,
     randomIndex: number;
@@ -174,7 +174,7 @@ function shuffle<T>(array: Array<T>): Array<T> {
 
 async function act(
   url: string | URL,
-  fetchOptions?: Parameters<typeof fetch>[1]
+  fetchOptions?: Parameters<typeof fetch>[1],
 ) {
   const contentsFetchOptions = {
     ...fetchOptions,
@@ -186,26 +186,26 @@ async function act(
   try {
     const { voteFile, ballotFile, publicKeyFile } = await fetchVoteFilesInfo(
       url as string,
-      fetchOptions
+      fetchOptions,
     );
 
     // This won't catch all the cases (if the PR modifies an existing file
     // rather than creating a new one, or if the YAML is formatted differently),
     // but it saves us from doing another request so deemed worth it.
     const shouldShuffleCandidates = /^\+canShuffleCandidates:\s*true$/m.test(
-      voteFile.patch
+      voteFile.patch,
     );
 
     return [
       fetch(ballotFile.contents_url, contentsFetchOptions)
-        .then((response) =>
+        .then(response =>
           response.ok
             ? response.text()
             : Promise.reject(
                 new Error(
-                  `Fetch error: ${response.status} ${response.statusText}`
-                )
-              )
+                  `Fetch error: ${response.status} ${response.statusText}`,
+                ),
+              ),
         )
         .then(
           shouldShuffleCandidates
@@ -213,7 +213,7 @@ async function act(
                 const match = startCandidateList.exec(ballotData);
                 if (match == null) {
                   console.warn(
-                    "Cannot find the list of candidates to shuffle, ignoring..."
+                    "Cannot find the list of candidates to shuffle, ignoring...",
                   );
                   return ballotData;
                 }
@@ -227,7 +227,7 @@ async function act(
                   lineStart = lineEnd + 1;
                   lineEnd = ballotData.indexOf("\n", lineStart);
                   if (lineEnd === lineStart) {
-                    currentCandidate += '\n';
+                    currentCandidate += "\n";
                     continue;
                   }
                   if (lineEnd === -1) {
@@ -237,8 +237,8 @@ async function act(
                     break;
                   }
                   if (
-                    ballotData[lineStart] !== " " ||
-                    ballotData[lineStart + 1] !== " "
+                    ballotData[lineStart] !== " "
+                    || ballotData[lineStart + 1] !== " "
                   )
                     break;
                   if (ballotData[lineStart + 2] === "-") {
@@ -249,22 +249,22 @@ async function act(
                 }
                 if (currentCandidate) candidates.push(currentCandidate);
                 return (
-                  ballotData.slice(0, headerEnd) +
-                  shuffle(candidates).join("") +
-                  "\n" +
-                  ballotData.slice(lineStart)
+                  ballotData.slice(0, headerEnd)
+                  + shuffle(candidates).join("")
+                  + "\n"
+                  + ballotData.slice(lineStart)
                 );
               }
-            : undefined
+            : undefined,
         ),
-      fetch(publicKeyFile.contents_url, contentsFetchOptions).then((response) =>
+      fetch(publicKeyFile.contents_url, contentsFetchOptions).then(response =>
         response.ok
           ? response.arrayBuffer()
           : Promise.reject(
               new Error(
-                `Fetch error: ${response.status} ${response.statusText}`
-              )
-            )
+                `Fetch error: ${response.status} ${response.statusText}`,
+              ),
+            ),
       ),
     ] as [Promise<string>, Promise<ArrayBuffer>];
   } catch (err) {
@@ -278,10 +278,10 @@ export default function fetchFromGitHub(
   { url, username, token }: { url: string; username?: string; token?: string },
   callback: (
     errOfResult: [Promise<string>, Promise<ArrayBuffer>]
-  ) => void | Promise<void>
+  ) => void | Promise<void>,
 ) {
-  const options =
-    username && token
+  const options
+    = username && token
       ? {
           headers: {
             Authorization: `Basic ${btoa(`${username}:${token}`)}`,

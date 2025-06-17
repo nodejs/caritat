@@ -1,7 +1,7 @@
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import * as crypto from "crypto";
-import { VoteMethod } from "./vote.js";
+import type { VoteMethod } from "./vote.js";
 
 export interface VoteFileFormat {
   candidates: string[];
@@ -45,7 +45,7 @@ export function parseYml<T>(document: string): T {
 export function loadYmlString<T>(
   document: string,
   encoding?: crypto.Encoding,
-  documentBuffer?: crypto.BinaryLike
+  documentBuffer?: crypto.BinaryLike,
 ): T {
   const data: T = yaml.load(document) as T;
   if (instanceOfVoteFile(data)) {
@@ -65,7 +65,7 @@ export function loadYmlFile<T>(filePath: fs.PathOrFileDescriptor): T {
   return loadYmlString<T>(document, null, documentBuffer);
 }
 
-/*** Fisher-Yates shuffle */
+/** * Fisher-Yates shuffle */
 function shuffle<T>(array: Array<T>): Array<T> {
   let currentIndex = array.length,
     randomIndex: number;
@@ -89,26 +89,26 @@ function shuffle<T>(array: Array<T>): Array<T> {
 export function templateBallot(
   voteConfig: VoteFileFormat,
   user: UserCredentials = undefined,
-  scores: Map<string, number> = undefined
+  scores: Map<string, number> = undefined,
 ): string {
   const subject: string = voteConfig.subject
     ? yaml.dump({ subject: voteConfig.subject }) + "\n"
     : "";
 
   const header = voteConfig.headerInstructions
-    ? "# " +
-      voteConfig.headerInstructions.trim().replaceAll("\n", "\n# ") +
-      "\n\n"
+    ? "# "
+    + voteConfig.headerInstructions.trim().replaceAll("\n", "\n# ")
+    + "\n\n"
     : "";
   const footer = voteConfig.footerInstructions
     ? "\n# " + voteConfig.footerInstructions.trim().replaceAll("\n", "\n# ")
     : "";
-  const preferences: { title: string; score: number }[] =
-    scores == null
+  const preferences: { title: string; score: number }[]
+    = scores == null
       ? (voteConfig.canShuffleCandidates !== false
           ? shuffle(voteConfig.candidates)
           : voteConfig.candidates
-        ).map((title) => ({ title, score: 0 }))
+        ).map(title => ({ title, score: 0 }))
       : Array.from(scores.entries(), ([title, score]) => ({ title, score }));
 
   const template: BallotFileFormat = {
@@ -122,16 +122,16 @@ export function templateBallot(
 export function checkBallot(
   ballotFile: BallotFileFormat,
   voteFile: VoteFileFormat,
-  author?: string
+  author?: string,
 ): boolean {
   return (
-    ballotFile.poolChecksum === voteFile.checksum &&
-    (author ?? ballotFile.author) != null &&
-    ballotFile.preferences.every(
-      (preference) =>
+    ballotFile.poolChecksum === voteFile.checksum
+    && (author ?? ballotFile.author) != null
+    && ballotFile.preferences.every(
+      preference =>
         voteFile.candidates.some(
-          (candidate) => candidate === preference.title
-        ) && Number.isSafeInteger(preference.score)
+          candidate => candidate === preference.title,
+        ) && Number.isSafeInteger(preference.score),
     )
   );
 }

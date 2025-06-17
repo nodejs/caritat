@@ -12,7 +12,7 @@ import decryptData from "@node-core/caritat-crypto/decrypt";
 import reconstructSplitKey from "@node-core/caritat-crypto/reconstructSplitKey";
 import type { VoteCommit } from "./vote.js";
 import Vote from "./vote.js";
-import { DiscardedCommit } from "./summary/electionSummary.js";
+import type { DiscardedCommit } from "./summary/electionSummary.js";
 import type VoteResult from "./votingMethods/VoteResult.js";
 import { getGPGSignGitFlag } from "./utils/gpgSign.js";
 
@@ -45,12 +45,12 @@ async function readFileAtRevision(
   GIT_BIN: string,
   revision: string,
   filePath: string,
-  spawnArgs: SpawnOptions
+  spawnArgs: SpawnOptions,
 ) {
   return await runChildProcessAsync(
     GIT_BIN,
     ["--no-pager", "show", `${revision}:${filePath}`],
-    { captureStdout: true, spawnArgs }
+    { captureStdout: true, spawnArgs },
   );
 }
 
@@ -87,10 +87,10 @@ export default async function countFromGit({
   gpgSign,
   doNotCleanTempFiles,
 }: countFromGitArgs): Promise<{
-  result: VoteResult;
-  privateKey: ArrayBuffer;
-  readonly privateKeyAsArmoredString: string;
-}> {
+    result: VoteResult;
+    privateKey: ArrayBuffer;
+    readonly privateKeyAsArmoredString: string;
+  }> {
   const spawnArgs = { cwd };
 
   let hasCreatedTempFiles = false;
@@ -107,7 +107,7 @@ export default async function countFromGit({
         repoURL,
         ".",
       ],
-      { spawnArgs }
+      { spawnArgs },
     );
     hasCreatedTempFiles = true;
   }
@@ -125,13 +125,13 @@ export default async function countFromGit({
       path.join(subPath, "ballot.yml"),
       path.join(subPath, "public.yml"),
     ],
-    { captureStdout: true, spawnArgs }
+    { captureStdout: true, spawnArgs },
   );
 
   if (hasVoteFilesBeenTampered) {
     // TODO: add flag to ignore this exception.
     throw new Error(
-      "Some magic files have been tampered with since start of the vote"
+      "Some magic files have been tampered with since start of the vote",
     );
   }
 
@@ -140,16 +140,16 @@ export default async function countFromGit({
     await runChildProcessAsync(
       GIT_BIN,
       ["show", `${firstCommitRef}:${voteFile}`],
-      { captureStdout: true, trimOutput: false, spawnArgs }
-    )
+      { captureStdout: true, trimOutput: false, spawnArgs },
+    ),
   );
 
   if (!privateKey) {
     privateKey = await reconstructSplitKey(
       Buffer.from(vote.voteFileData.encryptedPrivateKey, "base64"),
       keyParts?.map((part: string | BufferSource) =>
-        typeof part === "string" ? Buffer.from(part, "base64") : part
-      )
+        typeof part === "string" ? Buffer.from(part, "base64") : part,
+      ),
     );
   }
 
@@ -171,7 +171,7 @@ export default async function countFromGit({
       "--format=///%H %G? %aN <%aE>",
       "--name-only",
     ],
-    spawnArgs
+    spawnArgs,
   );
 
   let currentCommit: VoteCommit;
@@ -192,18 +192,18 @@ export default async function countFromGit({
                 {
                   commitInfo: { sha, author },
                   fileContents,
-                }
+                },
               );
             }
             return decryptData(
               Buffer.from(data, "base64"),
               Buffer.from(encryptedSecret, "base64"),
-              privateKey
+              privateKey,
             );
           })
           .then((data: BufferSource) => {
             vote.addBallotFromBufferSource(data, author);
-          })
+          }),
       );
     } else {
       const discardedCommit = {
@@ -249,7 +249,7 @@ export default async function countFromGit({
       ]);
       if (refs[0] !== refs[1]) {
         throw new Error(
-          "Cannot commit JSON summary if not on top of the vote branch"
+          "Cannot commit JSON summary if not on top of the vote branch",
         );
       }
     }
@@ -260,8 +260,8 @@ export default async function countFromGit({
         JSON.stringify(
           { ...result.toJSON(), ...commitJsonSummary },
           undefined,
-          2
-        ) + "\n"
+          2,
+        ) + "\n",
       );
     } finally {
       await fd.close();
@@ -279,7 +279,7 @@ export default async function countFromGit({
         "--",
         ".",
       ],
-      { spawnArgs }
+      { spawnArgs },
     );
 
     await runChildProcessAsync(GIT_BIN, ["add", filepath], { spawnArgs });
@@ -294,7 +294,7 @@ export default async function countFromGit({
       ],
       {
         spawnArgs,
-      }
+      },
     );
 
     if (pushToRemote) {
@@ -305,11 +305,11 @@ export default async function countFromGit({
           ["push", repoURL, `HEAD:${branch}`],
           {
             spawnArgs,
-          }
+          },
         );
       } catch {
         console.log(
-          "Pushing failed, maybe because the local branch is outdated. Attempting a rebase..."
+          "Pushing failed, maybe because the local branch is outdated. Attempting a rebase...",
         );
         await runChildProcessAsync(GIT_BIN, ["fetch", repoURL, branch], {
           spawnArgs,
@@ -320,14 +320,14 @@ export default async function countFromGit({
         await runChildProcessAsync(
           GIT_BIN,
           ["rebase", "FETCH_HEAD", ...getGPGSignGitFlag(gpgSign), "--quiet"],
-          { spawnArgs }
+          { spawnArgs },
         );
 
         console.log("Pushing to the remote repository...");
         await runChildProcessAsync(
           GIT_BIN,
           ["push", repoURL, `HEAD:${branch}`],
-          { spawnArgs }
+          { spawnArgs },
         );
       }
     }

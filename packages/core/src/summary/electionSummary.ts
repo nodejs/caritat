@@ -7,9 +7,9 @@ function displayWinners(winners: VoteCandidate[], keepOnlyFirstLineInSummary?: b
   if (winners.length === 1) return cleanMarkdown(winners[0], keepOnlyFirstLineInSummary);
   const delimiter = "\n - ";
   return delimiter + winners.map(
-    keepOnlyFirstLineInSummary ?
-      (l) => cleanMarkdown(l, keepOnlyFirstLineInSummary) :
-      (l) => cleanMarkdown(l).split('\n').join('\n   ')
+    keepOnlyFirstLineInSummary
+      ? l => cleanMarkdown(l, keepOnlyFirstLineInSummary)
+      : l => cleanMarkdown(l).split("\n").join("\n   "),
   ).join(delimiter);
 }
 
@@ -68,7 +68,7 @@ export default abstract class ElectionSummary {
     this.sortedBallots = unsortedBallots
       .slice()
       .sort((a, b) => a.voter.id.localeCompare(b.voter.id));
-    this.participants = this.sortedBallots.map((ballot) => ballot.voter);
+    this.participants = this.sortedBallots.map(ballot => ballot.voter);
 
     this.privateKey = privateKey;
   }
@@ -80,16 +80,16 @@ export default abstract class ElectionSummary {
 
 **Subject**: ${cleanMarkdown(this.subject)}  
 ${this.startDate ? `**Start date**: ${this.startDate}  \n` : ""}**End date**: ${
-      this.endDate
-    }  
+  this.endDate
+}  
 **Participation**: ${Math.round(this.participation * 10_000) / 100}%
 
 ## Results
 
 **Winning candidate${this.winners.length === 1 ? "" : "s"}**: ${displayWinners(
-      this.winners,
-      this.keepOnlyFirstLineInSummary
-    )}
+  this.winners,
+  this.keepOnlyFirstLineInSummary,
+)}
 
 ### Table of results
 
@@ -97,17 +97,17 @@ ${this.startDate ? `**Start date**: ${this.startDate}  \n` : ""}**End date**: ${
 | --------- | ------------------- |
 ${Array.from(this.result)
   .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-  .map((result) => `| ${cleanMarkdown(result[0], this.keepOnlyFirstLineInSummary)} | ${result[1]} |`)
+  .map(result => `| ${cleanMarkdown(result[0], this.keepOnlyFirstLineInSummary)} | ${result[1]} |`)
   .join("\n")}
 
 ## Voting data
 
 ${
   this.participants
-    ? "**Participants**:\n\n" +
-      this.participants
-        .map((actor, i) => `- ${cleanMarkdown(actor.id)}[^${i}]`)
-        .join("\n")
+    ? "**Participants**:\n\n"
+    + this.participants
+      .map((actor, i) => `- ${cleanMarkdown(actor.id)}[^${i}]`)
+      .join("\n")
     : ""
 }
 

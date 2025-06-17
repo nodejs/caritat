@@ -11,11 +11,11 @@ export default class CondorcetResult extends VoteResult {
     candidates: VoteCandidate[],
     subject: string,
     votes: Ballot[],
-    options: Partial<ElectionSummaryOptions>
+    options: Partial<ElectionSummaryOptions>,
   ) {
     super(authorizedVoters, candidates, subject, votes, options);
 
-    this.#result = new Map(candidates.map((candidate) => [candidate, 0]));
+    this.#result = new Map(candidates.map(candidate => [candidate, 0]));
 
     candidates.forEach((candidate, index) => {
       for (let i = index + 1; i < candidates.length; i++) {
@@ -29,14 +29,15 @@ export default class CondorcetResult extends VoteResult {
           else if (firstScore < secondScore) secondWins++;
         });
         if (firstWins != secondWins) {
-          const duelWinner: VoteCandidate =
-            firstWins > secondWins ? candidate : opponent;
+          const duelWinner: VoteCandidate
+            = firstWins > secondWins ? candidate : opponent;
 
           this.#result.set(duelWinner, this.#result.get(duelWinner) + 1);
         }
       }
     });
   }
+
   get result() {
     return this.#result;
   }
