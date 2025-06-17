@@ -1,7 +1,7 @@
 import it from "node:test";
 import { strict as assert } from "node:assert";
 
-import { VoteCandidate } from "../src/vote.js";
+import type { VoteCandidate } from "../src/vote.js";
 import VoteResult from "../src/votingMethods/VoteResult.js";
 import type { CandidateScores } from "../src/votingMethods/VoteResult";
 

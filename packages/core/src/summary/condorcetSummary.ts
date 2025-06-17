@@ -1,4 +1,4 @@
-import { Ballot, VoteCandidate } from "../vote";
+import type { Ballot, VoteCandidate } from "../vote";
 import cleanMarkdown from "../utils/cleanMarkdown.js";
 import ElectionSummary from "./electionSummary.js";
 
