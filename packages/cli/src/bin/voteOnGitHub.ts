@@ -89,7 +89,7 @@ const query = `query PR($prid: Int!, $owner: String!, $repo: String!) {
 console.log("Getting info from GitHub API...");
 const { data } = JSON.parse(
   await runChildProcessAsync(
-    parsedArgs["gh-binary"] as string,
+    parsedArgs["gh-binary"],
     [
       "api",
       "graphql",
@@ -122,7 +122,7 @@ if (merged || closed) {
 
 console.log(`Locating vote.yml on commit ${sha}...`);
 const files = await runChildProcessAsync(
-  parsedArgs["gh-binary"] as string,
+  parsedArgs["gh-binary"],
   [
     "api",
     `/repos/${owner}/${repo}/commits/${sha}`,

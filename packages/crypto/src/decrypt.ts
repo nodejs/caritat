@@ -20,7 +20,7 @@ export async function symmetricDecrypt(
   const { byteLength } = saltedCiphertext;
   if (ArrayBuffer.isView(saltedCiphertext)) {
     offset = saltedCiphertext.byteOffset;
-    saltedCiphertext = saltedCiphertext.buffer;
+    saltedCiphertext = saltedCiphertext.buffer as ArrayBuffer;
   }
 
   const magicNumber = new DataView(saltedCiphertext, offset, 8);

@@ -54,13 +54,13 @@ async function readFileAtRevision(
   );
 }
 
-interface countFromGitArgs {
+interface countFromGitArgs<T extends BufferSource> {
   GIT_BIN?: string;
   cwd: string;
   repoURL: string;
   branch: string;
   subPath: string;
-  privateKey?: ArrayBuffer;
+  privateKey?: T;
   keyParts: string[];
   firstCommitRef: string;
   lastCommitRef?: string;
@@ -71,7 +71,7 @@ interface countFromGitArgs {
   doNotCleanTempFiles: boolean;
 }
 
-export default async function countFromGit({
+export default async function countFromGit<T extends BufferSource = BufferSource>({
   GIT_BIN = "git",
   cwd,
   repoURL,
@@ -86,9 +86,9 @@ export default async function countFromGit({
   pushToRemote = true,
   gpgSign,
   doNotCleanTempFiles,
-}: countFromGitArgs): Promise<{
+}: countFromGitArgs<T>): Promise<{
     result: VoteResult;
-    privateKey: ArrayBuffer;
+    privateKey: T;
     readonly privateKeyAsArmoredString: string;
   }> {
   const spawnArgs = { cwd };
@@ -150,7 +150,7 @@ export default async function countFromGit({
       keyParts?.map((part: string | BufferSource) =>
         typeof part === "string" ? Buffer.from(part, "base64") : part,
       ),
-    );
+    ) as T;
   }
 
   if (mailmap != null) {
@@ -343,7 +343,7 @@ export default async function countFromGit({
     result,
     privateKey,
     get privateKeyAsArmoredString() {
-      const base64Key = Buffer.from(privateKey).toString("base64");
+      const base64Key = Buffer.from(privateKey as ArrayBuffer).toString("base64");
       let key = "-----BEGIN PRIVATE KEY-----\n";
       for (let i = 0; i < base64Key.length; i += 64) {
         key += base64Key.slice(i, i + 60) + "\n";
