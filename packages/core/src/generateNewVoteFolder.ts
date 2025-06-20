@@ -9,7 +9,7 @@ import { env } from "node:process";
 import * as yaml from "js-yaml";
 
 import { generateAndSplitKeyPair } from "@node-core/caritat-crypto/generateSplitKeyPair";
-import { loadYmlString, templateBallot, VoteFileFormat } from "./parser.js";
+import { loadYmlString, templateBallot, type VoteFileFormat } from "./parser.js";
 import runChildProcessAsync from "./utils/runChildProcessAsync.js";
 import type { VoteMethod } from "./vote.js";
 
@@ -59,7 +59,7 @@ interface Options {
     commitMessage?: string;
     commitAuthor?: string;
     gpgSign?: boolean | string;
-    pushToRemote?: boolean
+    pushToRemote?: boolean;
   };
 }
 
@@ -86,7 +86,7 @@ export default async function generateNewVoteFolder(options: Options) {
         gitOptions.repo,
         ".",
       ],
-      { spawnArgs }
+      { spawnArgs },
     );
 
     directory = path.join(cwd, options.path);
@@ -135,10 +135,10 @@ export default async function generateNewVoteFolder(options: Options) {
 
   const shareHolders = options.shareholders;
 
-  const { encryptedPrivateKey, publicKey, shares } =
-    await generateAndSplitKeyPair(
+  const { encryptedPrivateKey, publicKey, shares }
+    = await generateAndSplitKeyPair(
       shareHolders.length,
-      Number(options.shareholdersThreshold)
+      Number(options.shareholdersThreshold),
     );
 
   function toArmordedMessage(data: ArrayBuffer) {
@@ -158,7 +158,7 @@ export default async function generateNewVoteFolder(options: Options) {
     method: options.method ?? "Condorcet",
     allowedVoters: options.allowedVoters,
     publicKey: `-----BEGIN PUBLIC KEY-----\n${toArmordedMessage(
-      publicKey
+      publicKey,
     )}\n-----END PUBLIC KEY-----\n`,
     encryptedPrivateKey: Buffer.from(encryptedPrivateKey).toString("base64"),
     shares: (
@@ -180,7 +180,7 @@ export default async function generateNewVoteFolder(options: Options) {
                   "--recipient",
                   shareHolders[i],
                 ],
-                { stdio: ["pipe", "pipe", "inherit"] }
+                { stdio: ["pipe", "pipe", "inherit"] },
               );
               gpg.on("error", reject);
               gpg.stdout
@@ -189,12 +189,12 @@ export default async function generateNewVoteFolder(options: Options) {
                   resolve(
                     Buffer.concat(chunks)
                       .toString("ascii")
-                      .replaceAll("\r\n", "\n")
+                      .replaceAll("\r\n", "\n"),
                   );
                 }, reject);
               gpg.stdin.end(new Uint8Array(raw));
-            })
-        )
+            }),
+        ),
       )
     ).filter(String),
     canShuffleCandidates: options.canShuffleCandidates,
@@ -217,7 +217,7 @@ export default async function generateNewVoteFolder(options: Options) {
     if (needsConfirmation) {
       await runChildProcessAsync(
         env?.EDITOR ?? (os.platform() === "win32" ? "notepad" : "vi"),
-        [voteFilePath]
+        [voteFilePath],
       );
       yamlString = await fs.readFile(voteFilePath, "utf-8");
     }
@@ -246,7 +246,7 @@ export default async function generateNewVoteFolder(options: Options) {
     await runChildProcessAsync(
       GIT_BIN,
       ["add", publicKeyPath, ballotPath, voteFilePath],
-      { spawnArgs }
+      { spawnArgs },
     );
 
     await runChildProcessAsync(
@@ -256,13 +256,13 @@ export default async function generateNewVoteFolder(options: Options) {
         ...(gpgSign === true
           ? ["-S"]
           : typeof gpgSign === "string"
-          ? ["-S", gpgSign]
-          : []),
+            ? ["-S", gpgSign]
+            : []),
         ...(commitAuthor ? ["--author", commitAuthor] : []),
         "-m",
         commitMessage ?? `Initiate vote for "${options.subject}"`,
       ],
-      { spawnArgs }
+      { spawnArgs },
     );
 
     if (repo && pushToRemote) {
@@ -275,7 +275,7 @@ export default async function generateNewVoteFolder(options: Options) {
       if (doNotCleanTempFiles) {
         console.info(
           "The temp folder was not removed from the file system",
-          cwd
+          cwd,
         );
       } else {
         await fs.rm(cwd, { recursive: true, force: true });

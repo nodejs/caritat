@@ -9,15 +9,15 @@ export default (
     captureStderr = false,
     trimOutput = true,
     spawnArgs = {},
-  } = {}
+  } = {},
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const opt = {
       stdio: captureStdout
         ? (["inherit", "pipe", "inherit"] as IOType[])
         : captureStderr
-        ? (["inherit", "inherit", "pipe"] as IOType[])
-        : ("inherit" as IOType),
+          ? (["inherit", "inherit", "pipe"] as IOType[])
+          : ("inherit" as IOType),
       ...spawnArgs,
     };
     const child = spawn(cmd, args as string[], opt);
@@ -42,4 +42,4 @@ export default (
       }
       return resolve(trimOutput ? stdout?.trim() : stdout);
     });
-  }) as Promise<string>;
+  });

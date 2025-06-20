@@ -2,11 +2,15 @@ import type { Actor, Ballot, VoteCandidate, VoteCommit } from "../vote";
 import type { CandidateScores } from "../votingMethods/VotingMethodImplementation";
 import cleanMarkdown from "../utils/cleanMarkdown.js";
 
-function displayWinners(winners: VoteCandidate[]) {
+function displayWinners(winners: VoteCandidate[], keepOnlyFirstLineInSummary?: boolean) {
   if (winners.length === 0) return "None.";
-  if (winners.length === 1) return cleanMarkdown(winners[0]);
+  if (winners.length === 1) return cleanMarkdown(winners[0], keepOnlyFirstLineInSummary);
   const delimiter = "\n - ";
-  return delimiter + winners.map(cleanMarkdown).join(delimiter);
+  return delimiter + winners.map(
+    keepOnlyFirstLineInSummary
+      ? l => cleanMarkdown(l, keepOnlyFirstLineInSummary)
+      : l => cleanMarkdown(l).split("\n").join("\n   "),
+  ).join(delimiter);
 }
 
 export interface DiscardedCommit {
@@ -23,6 +27,7 @@ export interface ElectionSummaryOptions {
   ballots: Ballot[];
   privateKey: string;
   discardedCommits?: DiscardedCommit[];
+  keepOnlyFirstLineInSummary?: boolean;
 }
 export default abstract class ElectionSummary {
   subject: string;
@@ -35,6 +40,7 @@ export default abstract class ElectionSummary {
   privateKey: string;
   participants: Actor[];
   discardedCommits: DiscardedCommit[];
+  keepOnlyFirstLineInSummary: boolean;
 
   abstract scoreText: string;
 
@@ -48,6 +54,7 @@ export default abstract class ElectionSummary {
     ballots: unsortedBallots,
     privateKey,
     discardedCommits,
+    keepOnlyFirstLineInSummary,
   }: ElectionSummaryOptions) {
     this.subject = subject;
     this.startDate = startDate;
@@ -56,11 +63,12 @@ export default abstract class ElectionSummary {
     this.winners = winners;
     this.result = result;
     this.discardedCommits = discardedCommits;
+    this.keepOnlyFirstLineInSummary = !!keepOnlyFirstLineInSummary;
 
     this.sortedBallots = unsortedBallots
       .slice()
       .sort((a, b) => a.voter.id.localeCompare(b.voter.id));
-    this.participants = this.sortedBallots.map((ballot) => ballot.voter);
+    this.participants = this.sortedBallots.map(ballot => ballot.voter);
 
     this.privateKey = privateKey;
   }
@@ -72,15 +80,16 @@ export default abstract class ElectionSummary {
 
 **Subject**: ${cleanMarkdown(this.subject)}  
 ${this.startDate ? `**Start date**: ${this.startDate}  \n` : ""}**End date**: ${
-      this.endDate
-    }  
+  this.endDate
+}  
 **Participation**: ${Math.round(this.participation * 10_000) / 100}%
 
 ## Results
 
 **Winning candidate${this.winners.length === 1 ? "" : "s"}**: ${displayWinners(
-      this.winners
-    )}
+  this.winners,
+  this.keepOnlyFirstLineInSummary,
+)}
 
 ### Table of results
 
@@ -88,17 +97,17 @@ ${this.startDate ? `**Start date**: ${this.startDate}  \n` : ""}**End date**: ${
 | --------- | ------------------- |
 ${Array.from(this.result)
   .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-  .map((result) => `| ${cleanMarkdown(result[0])} | ${result[1]} |`)
+  .map(result => `| ${cleanMarkdown(result[0], this.keepOnlyFirstLineInSummary)} | ${result[1]} |`)
   .join("\n")}
 
 ## Voting data
 
 ${
   this.participants
-    ? "**Participants**:\n\n" +
-      this.participants
-        .map((actor, i) => `- ${cleanMarkdown(actor.id)}[^${i}]`)
-        .join("\n")
+    ? "**Participants**:\n\n"
+    + this.participants
+      .map((actor, i) => `- ${cleanMarkdown(actor.id)}[^${i}]`)
+      .join("\n")
     : ""
 }
 

@@ -10,11 +10,11 @@ import { getGPGSignGitFlag } from "./utils/gpgSign.js";
 
 import encryptData from "@node-core/caritat-crypto/encrypt";
 import {
-  BallotFileFormat,
+  type BallotFileFormat,
   loadYmlFile,
   parseYml,
   templateBallot,
-  VoteFileFormat,
+  type VoteFileFormat,
 } from "./parser.js";
 import {
   getSummarizedBallot,
@@ -51,7 +51,7 @@ export async function voteAndCommit({
     const textDecoder = new TextDecoder();
     await fs.writeFile(
       path.join(cwd, subPath, `${handle || username}.yml`),
-      plainTextBallot
+      plainTextBallot,
     );
 
     let editFile = true;
@@ -62,18 +62,18 @@ export async function voteAndCommit({
         path.join(cwd, subPath, `${handle || username}.yml`),
       ], { spawnArgs: { shell: true } });
       rawBallot = await fs.readFile(
-        path.join(cwd, subPath, `${handle || username}.yml`)
+        path.join(cwd, subPath, `${handle || username}.yml`),
       );
       {
         const ballotData = parseYml<BallotFileFormat>(
-          textDecoder.decode(rawBallot)
+          textDecoder.decode(rawBallot),
         );
 
         const preferences = new Map(
-          ballotData.preferences.map((element) => [
+          ballotData.preferences.map(element => [
             element.title,
             element.score,
-          ])
+          ]),
         );
         const ballot = getSummarizedBallot({
           voter: { id: ballotData.author },
@@ -92,26 +92,26 @@ export async function voteAndCommit({
         const chars = await once(stdin, "data");
         stdin.pause();
         if (
-          chars[0][0] === 0x61 || // a
-          chars[0][0] === 0x41 // A
+          chars[0][0] === 0x61 // a
+          || chars[0][0] === 0x41 // A
         )
           throw new Error("Aborted by the user");
-        editFile =
-          chars[0][0] === 0x6e || // n
-          chars[0][0] === 0x4e; // N
+        editFile
+          = chars[0][0] === 0x6e // n
+            || chars[0][0] === 0x4e; // N
       }
     }
   }
   console.log("Encrypting ballot with vote public key...");
   const { encryptedSecret, saltedCiphertext } = await encryptData(
     rawBallot,
-    vote.publicKey
+    vote.publicKey,
   );
 
   const jsonFilePath = path.join(
     cwd,
     subPath,
-    `${handle || username.replace(/\W/g, "") || crypto.randomUUID()}.json`
+    `${handle || username.replace(/\W/g, "") || crypto.randomUUID()}.json`,
   );
   await fs.writeFile(
     jsonFilePath,
@@ -119,7 +119,7 @@ export async function voteAndCommit({
       author,
       encryptedSecret: Buffer.from(encryptedSecret).toString("base64"),
       data: Buffer.from(saltedCiphertext).toString("base64"),
-    }) + "\n"
+    }) + "\n",
   );
 
   console.log("Commit encrypted ballot.");
@@ -136,7 +136,7 @@ export async function voteAndCommit({
     ],
     {
       spawnArgs,
-    }
+    },
   );
 }
 
@@ -162,7 +162,7 @@ export default async function voteUsingGit({
     await runChildProcessAsync(
       GIT_BIN,
       ["clone", "--branch", branch, "--no-tags", "--depth=1", repoURL, "."],
-      { spawnArgs }
+      { spawnArgs },
     );
 
     await voteAndCommit({
@@ -185,7 +185,7 @@ export default async function voteUsingGit({
         });
       } catch {
         console.log(
-          "Pushing failed, maybe because the local branch is outdated. Attempting a rebase..."
+          "Pushing failed, maybe because the local branch is outdated. Attempting a rebase...",
         );
         await runChildProcessAsync(GIT_BIN, ["fetch", repoURL, branch], {
           spawnArgs,
@@ -198,9 +198,9 @@ export default async function voteUsingGit({
           ["rebase", "FETCH_HEAD", ...getGPGSignGitFlag(gpgSign), "--quiet"],
           {
             spawnArgs,
-          }
+          },
         );
-        
+
         console.log("Pushing to the remote repository...");
         await runChildProcessAsync(GIT_BIN, ["push", repoURL, `HEAD:${branch}`], {
           spawnArgs,

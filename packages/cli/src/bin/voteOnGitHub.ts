@@ -18,9 +18,9 @@ const parsedArgs = await parseArgs()
 
     protocol: {
       describe:
-        "the protocol to use to pull the remote repository, either SSH or " +
-        "HTTP (defaults to SSH if a public SSH key is found for the current " +
-        "user, otherwise default to HTTP)",
+        "the protocol to use to pull the remote repository, either SSH or "
+        + "HTTP (defaults to SSH if a public SSH key is found for the current "
+        + "user, otherwise default to HTTP)",
       type: "string",
     },
     login: {
@@ -44,11 +44,11 @@ const parsedArgs = await parseArgs()
         type: "string",
         describe: "URL to the GitHub pull request",
       });
-    }
+    },
   ).argv;
 
 const prUrlInfo = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)$/.exec(
-  (parsedArgs as typeof parsedArgs & { "pr-url"?: string })["pr-url"]
+  (parsedArgs as typeof parsedArgs & { "pr-url"?: string })["pr-url"],
 );
 
 if (prUrlInfo == null) {
@@ -89,7 +89,7 @@ const query = `query PR($prid: Int!, $owner: String!, $repo: String!) {
 console.log("Getting info from GitHub API...");
 const { data } = JSON.parse(
   await runChildProcessAsync(
-    parsedArgs["gh-binary"] as string,
+    parsedArgs["gh-binary"],
     [
       "api",
       "graphql",
@@ -102,8 +102,8 @@ const { data } = JSON.parse(
       "-f",
       `query=${query}`,
     ],
-    { captureStdout: true }
-  )
+    { captureStdout: true },
+  ),
 );
 
 const { pullRequest } = data.repository;
@@ -122,38 +122,38 @@ if (merged || closed) {
 
 console.log(`Locating vote.yml on commit ${sha}...`);
 const files = await runChildProcessAsync(
-  parsedArgs["gh-binary"] as string,
+  parsedArgs["gh-binary"],
   [
     "api",
     `/repos/${owner}/${repo}/commits/${sha}`,
     "--jq",
     ".files.[] | .filename",
   ],
-  { captureStdout: true }
+  { captureStdout: true },
 );
 
 const voteFileCanonicalName = "vote.yml";
 const subPath = files
   .split("\n")
   .find(
-    (path) =>
-      path === voteFileCanonicalName ||
-      path.endsWith(`/${voteFileCanonicalName}`)
+    path =>
+      path === voteFileCanonicalName
+      || path.endsWith(`/${voteFileCanonicalName}`),
   )
   ?.slice(0, -voteFileCanonicalName.length);
 
 const handle = parsedArgs.login || data.viewer.login;
 
-const protocol =
-  parsedArgs.protocol ?? (data.viewer.publicKeys.totalCount ? "ssh" : "http");
+const protocol
+  = parsedArgs.protocol ?? (data.viewer.publicKeys.totalCount ? "ssh" : "http");
 
 function getHTTPRepoURL(repoURL: string, login: string) {
   const url = new URL(repoURL + ".git");
   url.username = login;
   return url.toString();
 }
-const repoURL =
-  protocol === "ssh"
+const repoURL
+  = protocol === "ssh"
     ? repository.sshUrl
     : getHTTPRepoURL(repository.url, handle);
 

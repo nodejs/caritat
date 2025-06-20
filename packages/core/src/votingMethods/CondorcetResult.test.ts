@@ -22,7 +22,7 @@ it("should return a map for a vote", () => {
         voter: { id: "1" },
         preferences: new Map([["a", 1]]),
       },
-    ]
+    ],
   );
 
   assert.deepStrictEqual([...result], [["a", 0]]);
@@ -36,13 +36,13 @@ it("should return a map for a vote", () => {
             voter: { id: "1" },
             preferences: new Map([["a", 1]]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 1],
       ["b", 0],
-    ]
+    ],
   );
 });
 
@@ -58,7 +58,7 @@ it("should return a map for two votes", () => {
         voter: { id: "2" },
         preferences: new Map([["a", 1]]),
       },
-    ]
+    ],
   );
 
   assert.deepStrictEqual([...result], [["a", 0]]);
@@ -78,13 +78,13 @@ it("should return the correct result", () => {
             voter: { id: "2" },
             preferences: new Map([["a", 1]]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 1],
       ["b", 0],
-    ]
+    ],
   );
   assert.deepStrictEqual(
     [
@@ -99,13 +99,13 @@ it("should return the correct result", () => {
             voter: { id: "2" },
             preferences: new Map([["b", 1]]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 0],
       ["b", 1],
-    ]
+    ],
   );
   assert.deepStrictEqual(
     [
@@ -124,13 +124,13 @@ it("should return the correct result", () => {
             voter: { id: "3" },
             preferences: new Map([["b", 1]]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 0],
       ["b", 1],
-    ]
+    ],
   );
   assert.deepStrictEqual(
     [
@@ -158,14 +158,14 @@ it("should return the correct result", () => {
               ["a", 0.5],
             ]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 1],
       ["b", 1],
       ["c", 1],
-    ]
+    ],
   );
   assert.deepStrictEqual(
     [
@@ -193,14 +193,14 @@ it("should return the correct result", () => {
               ["a", 0.5],
             ]),
           },
-        ]
+        ],
       ),
     ],
     [
       ["a", 2],
       ["b", 1],
       ["c", 0],
-    ]
+    ],
   );
 });
 

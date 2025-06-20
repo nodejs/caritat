@@ -1,4 +1,4 @@
-import { Ballot, VoteCandidate } from "../vote";
+import type { Ballot, VoteCandidate } from "../vote";
 import cleanMarkdown from "../utils/cleanMarkdown.js";
 import ElectionSummary from "./electionSummary.js";
 
@@ -9,7 +9,7 @@ const formatter = new Intl.ListFormat("en", {
 
 export function summarizeCondorcetBallotForElectionSummary(
   ballot: BallotSummarize,
-  indentLength = 0
+  indentLength = 0,
 ): string {
   if (ballot.abstain) return "Abstained.";
   if (ballot.maxCandidates && ballot.minCandidates) {
@@ -23,25 +23,25 @@ export function summarizeCondorcetBallotForElectionSummary(
   const indent = " ".repeat(indentLength);
   return ballot.orderedCandidates
     .map(
-      (candidates, i) => `${indent}${i + 1}. ${formatter.format(candidates)}.`
+      (candidates, i) => `${indent}${i + 1}. ${formatter.format(candidates)}.`,
     )
     .join("\n");
 }
 export function summarizeCondorcetBallotForVoter(
   ballot: BallotSummarize,
-  indentLength = 0
+  indentLength = 0,
 ): string {
   if (ballot.abstain) return "You are abstaining from this vote.";
   if (ballot.maxCandidates && ballot.minCandidates) {
     const { maxCandidates, minCandidates } = ballot;
     return (
-      `Your favorite option(s) is/are:\n - ${maxCandidates.join(".\n - ")}.\n` +
-      `\n` +
-      `Your least favorite option(s) is/are:\n - ${minCandidates.join(
-        ".\n - "
-      )}.\n` +
-      `\n` +
-      `Your are voting ${
+      `Your favorite option(s) is/are:\n - ${maxCandidates.join(".\n - ")}.\n`
+      + `\n`
+      + `Your least favorite option(s) is/are:\n - ${minCandidates.join(
+        ".\n - ",
+      )}.\n`
+      + `\n`
+      + `Your are voting ${
         maxCandidates.length <= minCandidates.length
           ? "for " + formatter.format(maxCandidates)
           : "against " + formatter.format(minCandidates)
@@ -51,19 +51,19 @@ export function summarizeCondorcetBallotForVoter(
   const indent = " ".repeat(indentLength);
   return (
     `Your favorite option(s) is/are:\n - ${ballot.orderedCandidates[0].join(
-      ".\n - "
-    )}.\n` +
-    `\n` +
-    `Your least favorite option(s) is/are:\n - ${ballot.orderedCandidates
+      ".\n - ",
+    )}.\n`
+    + `\n`
+    + `Your least favorite option(s) is/are:\n - ${ballot.orderedCandidates
       .at(-1)
-      .join(".\n - ")}.\n` +
-    `\n` +
-    "The complete list of your preferences is:\n" +
-    ballot.orderedCandidates
-      .map(
-        (candidates, i) => `${indent}${i + 1}. ${formatter.format(candidates)}.`
-      )
-      .join("\n")
+      .join(".\n - ")}.\n`
+      + `\n`
+      + "The complete list of your preferences is:\n"
+      + ballot.orderedCandidates
+        .map(
+          (candidates, i) => `${indent}${i + 1}. ${formatter.format(candidates)}.`,
+        )
+        .join("\n")
   );
 }
 
@@ -73,7 +73,10 @@ interface BallotSummarize {
   minCandidates?: VoteCandidate[];
   orderedCandidates?: VoteCandidate[][];
 }
-export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
+export function getSummarizedBallot(
+  ballot: Ballot,
+  keepOnlyFirstLineInSummary?: boolean,
+): BallotSummarize {
   let maxNote = Number.MIN_SAFE_INTEGER;
   let minNote = Number.MAX_SAFE_INTEGER;
   for (const [, score] of ballot.preferences) {
@@ -91,7 +94,8 @@ export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
       for (const [candidate, score] of ballot.preferences) {
         const candidatesForThisScore = orderedPreferences.get(score);
         const markdownCandidate = `**${cleanMarkdown(
-          candidate.replace(/\.$/, "")
+          candidate,
+          keepOnlyFirstLineInSummary,
         )}**`;
         if (candidatesForThisScore == null) {
           orderedPreferences.set(score, [markdownCandidate]);
@@ -106,7 +110,7 @@ export function getSummarizedBallot(ballot: Ballot): BallotSummarize {
       };
     }
     const group = score === minNote ? minCandidates : maxCandidates;
-    group.push(`**${cleanMarkdown(candidate).replace(/\.$/, "")}**`);
+    group.push(`**${cleanMarkdown(candidate, keepOnlyFirstLineInSummary)}**`);
   }
   return { minCandidates, maxCandidates };
 }
@@ -116,8 +120,8 @@ export default class CondorcetElectionSummary extends ElectionSummary {
 
   summarizeBallot(ballot: Ballot) {
     return summarizeCondorcetBallotForElectionSummary(
-      getSummarizedBallot(ballot),
-      4
+      getSummarizedBallot(ballot, this.keepOnlyFirstLineInSummary),
+      4,
     );
   }
 }

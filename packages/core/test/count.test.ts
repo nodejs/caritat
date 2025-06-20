@@ -10,7 +10,7 @@ const fixturesURL = new URL("../../../test/fixtures/", import.meta.url);
 // const ballotDirURL = new URL("./ballots/", fixturesURL);
 
 const voteFileParsed = loadYmlFile<VoteFileFormat>(
-  new URL("vote.yml", fixturesURL)
+  new URL("vote.yml", fixturesURL),
 );
 // it("should create ballot pool", () => {
 //   let pool: BallotPool = new BallotPool();

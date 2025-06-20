@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import fs from "fs";
- 
+
 import parseArgs from "../utils/parseArgs.js";
 import decryptData from "@node-core/caritat-crypto/decrypt";
 
@@ -25,7 +25,7 @@ const parsedArgs = await parseArgs().options({
 const { data: filePath, key: privateKeyPath } = parsedArgs;
 
 const { encryptedSecret, data } = JSON.parse(
-  fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, "")
+  fs.readFileSync(filePath, "utf8").replace(/^\uFEFF/, ""),
 );
 
 console.log(
@@ -34,8 +34,8 @@ console.log(
       await decryptData(
         Buffer.from(data, "base64"),
         Buffer.from(encryptedSecret, "base64"),
-        fs.readFileSync(privateKeyPath)
-      )
-    )
-  ).toString("utf8")
+        fs.readFileSync(privateKeyPath),
+      ),
+    ),
+  ).toString("utf8"),
 );

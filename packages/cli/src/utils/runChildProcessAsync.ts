@@ -4,15 +4,15 @@ export default (
   cmd: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: any[] | readonly string[],
-  { captureStdout = false, captureStderr = false, spawnArgs = {} } = {}
+  { captureStdout = false, captureStderr = false, spawnArgs = {} } = {},
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const opt = {
       stdio: captureStdout
         ? (["inherit", "pipe", "inherit"] as IOType[])
         : captureStderr
-        ? (["inherit", "inherit", "pipe"] as IOType[])
-        : ("inherit" as IOType),
+          ? (["inherit", "inherit", "pipe"] as IOType[])
+          : ("inherit" as IOType),
       ...spawnArgs,
     };
     const child = spawn(cmd, args, opt);
@@ -37,4 +37,4 @@ export default (
       }
       return resolve(stdout?.trim());
     });
-  }) as Promise<string>;
+  });

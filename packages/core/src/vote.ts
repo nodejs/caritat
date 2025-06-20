@@ -1,17 +1,17 @@
 import {
-  BallotFileFormat,
+  type BallotFileFormat,
   checkBallot,
   loadYmlFile,
   loadYmlString,
   parseYml,
-  VoteFileFormat,
+  type VoteFileFormat,
 } from "./parser.js";
 import type { PathOrFileDescriptor } from "fs";
 import type { CandidateScores } from "./votingMethods/VotingMethodImplementation.js";
 import VoteResult from "./votingMethods/VoteResult.js";
 import CondorcetResult from "./votingMethods/CondorcetResult.js";
 import SingleRoundResult from "./votingMethods/SingleRoundResult.js";
-import { ElectionSummaryOptions } from "./summary/electionSummary.js";
+import type { ElectionSummaryOptions } from "./summary/electionSummary.js";
 
 export interface Actor {
   id: string;
@@ -86,16 +86,18 @@ export default class Vote {
     const voteData: VoteFileFormat = loadYmlFile<VoteFileFormat>(voteFilePath);
     this.voteFromVoteData(voteData);
   }
+
   public loadFromString(voteFileContents: string): void {
-    const voteData: VoteFileFormat =
-      loadYmlString<VoteFileFormat>(voteFileContents);
+    const voteData: VoteFileFormat
+      = loadYmlString<VoteFileFormat>(voteFileContents);
     this.voteFromVoteData(voteData);
   }
+
   private voteFromVoteData(voteData: VoteFileFormat) {
     this.voteFileData = voteData;
     this.#candidates = voteData.candidates;
     this.#targetMethod = voteData.method as VoteMethod;
-    this.#authorizedVoters = voteData.allowedVoters?.map((id) => ({ id }));
+    this.#authorizedVoters = voteData.allowedVoters?.map(id => ({ id }));
     this.subject = voteData.subject ?? "Unknown vote";
   }
 
@@ -109,9 +111,9 @@ export default class Vote {
 
   public addCandidate(candidate: VoteCandidate, checkUniqueness = false): void {
     if (
-      checkUniqueness &&
-      this.#candidates.some(
-        (existingCandidate: VoteCandidate) => existingCandidate === candidate
+      checkUniqueness
+      && this.#candidates.some(
+        (existingCandidate: VoteCandidate) => existingCandidate === candidate,
       )
     ) {
       throw new Error("Cannot have duplicate candidate id");
@@ -126,14 +128,14 @@ export default class Vote {
     if (this.#alreadyCommittedVoters.has(commit.author))
       return "A more recent vote commit from this author has already been counted.";
     if (
-      this.#authorizedVoters &&
-      !this.#authorizedVoters.some((voter) => voter.id === commit.author)
+      this.#authorizedVoters
+      && !this.#authorizedVoters.some(voter => voter.id === commit.author)
     )
       return `The commit author (${commit.author}) is not in the list of allowed voters.`;
 
     if (
-      this.voteFileData.requireSignedBallots &&
-      commit.signatureStatus !== "G"
+      this.voteFileData.requireSignedBallots
+      && commit.signatureStatus !== "G"
     ) {
       return `Valid signature are required for this vote, expected status G, got ${commit.signatureStatus}`;
     }
@@ -145,7 +147,7 @@ export default class Vote {
   public addBallotFile(ballotData: BallotFileFormat, author?: string): Ballot {
     if (ballotData && checkBallot(ballotData, this.voteFileData, author)) {
       const preferences: Map<VoteCandidate, Rank> = new Map(
-        ballotData.preferences.map((element) => [element.title, element.score])
+        ballotData.preferences.map(element => [element.title, element.score]),
       );
       const ballot: Ballot = {
         voter: { id: author ?? ballotData.author },
@@ -166,13 +168,13 @@ export default class Vote {
   public addBallotFromBufferSource(data: BufferSource, author?: string): void {
     this.addBallotFile(
       parseYml<BallotFileFormat>(this.textDecoder.decode(data)),
-      author
+      author,
     );
   }
 
   public addBallot(ballot: Ballot): void {
     const existingBallotIndex = this.#votes.findIndex(
-      (existingBallot: Ballot) => existingBallot.voter.id === ballot.voter.id
+      (existingBallot: Ballot) => existingBallot.voter.id === ballot.voter.id,
     );
     if (existingBallotIndex !== -1) {
       this.#votes[existingBallotIndex] = ballot;
@@ -182,18 +184,18 @@ export default class Vote {
   }
 
   public count(
-    options?: Partial<ElectionSummaryOptions> & { method?: VoteMethod }
+    options?: Partial<ElectionSummaryOptions> & { method?: VoteMethod },
   ): VoteResult {
     if (this.#targetMethod == null) throw new Error("Set targetMethod before");
     const VoteResultImpl = getVoteResultImplementation(
-      options?.method ?? this.#targetMethod
+      options?.method ?? this.#targetMethod,
     );
     return new VoteResultImpl(
       this.#authorizedVoters,
       this.#candidates,
       this.subject,
       this.#votes,
-      options
+      options,
     );
   }
 }
