@@ -12,7 +12,7 @@ export default async function* streamChildProcessStdout(
     stdio: ["inherit", "pipe", "inherit"],
     ...spawnArgs,
   });
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise<void>((resolve, reject) => {
     child.once("error", reject);
     child.on("close", (code) => {
       if (code !== 0) {
@@ -20,7 +20,7 @@ export default async function* streamChildProcessStdout(
       }
       resolve();
     });
-  }) as Promise<void>;
+  });
   yield* createInterface({ input: child.stdout });
   return promise;
 }
