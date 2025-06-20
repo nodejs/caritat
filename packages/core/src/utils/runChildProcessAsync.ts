@@ -11,7 +11,7 @@ export default (
     spawnArgs = {},
   } = {},
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const opt = {
       stdio: captureStdout
         ? (["inherit", "pipe", "inherit"] as IOType[])
@@ -42,4 +42,4 @@ export default (
       }
       return resolve(trimOutput ? stdout?.trim() : stdout);
     });
-  }) as Promise<string>;
+  });

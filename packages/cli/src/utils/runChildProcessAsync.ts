@@ -6,7 +6,7 @@ export default (
   args: any[] | readonly string[],
   { captureStdout = false, captureStderr = false, spawnArgs = {} } = {},
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const opt = {
       stdio: captureStdout
         ? (["inherit", "pipe", "inherit"] as IOType[])
@@ -37,4 +37,4 @@ export default (
       }
       return resolve(stdout?.trim());
     });
-  }) as Promise<string>;
+  });

@@ -30,7 +30,7 @@ export const cliArgs = {
 };
 
 export async function getEnv(parsedArgs: GitCliArgsType) {
-  const GIT_BIN = (parsedArgs["git-binary"] ?? env.GIT ?? "git") as string;
+  const GIT_BIN = (parsedArgs["git-binary"] ?? env.GIT ?? "git");
 
   const cwd = await fs.mkdtemp(path.join(os.tmpdir(), "caritat-"));
   return {
