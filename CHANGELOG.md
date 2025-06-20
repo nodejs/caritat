@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.0](https://github.com/nodejs/caritat/compare/v1.6.0...v1.7.0) (2025-06-20)
+
+
+### Features
+
+* **chore:** add option to strip additional lines in summary ([#59](https://github.com/nodejs/caritat/issues/59)) ([3535a04](https://github.com/nodejs/caritat/commit/3535a043da9d22b776dbb2160e5d5a06ee2f5269))
+* **web-ui:** add optional ballot text summary ([#56](https://github.com/nodejs/caritat/issues/56)) ([2296c34](https://github.com/nodejs/caritat/commit/2296c34e06c3c1fb8b812259b6bfc6806e9d3a66))
+
+
+### Bug Fixes
+
+* **web-ui:** shuffling candidates with line returns ([#57](https://github.com/nodejs/caritat/issues/57)) ([0dc81c9](https://github.com/nodejs/caritat/commit/0dc81c994010169f9f15ea5132ebfe42657aa9c8))
+
 ## [1.6.0](https://github.com/nodejs/caritat/compare/v1.5.0...v1.6.0) (2024-06-26)
 
 
