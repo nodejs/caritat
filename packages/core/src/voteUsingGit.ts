@@ -128,6 +128,7 @@ export async function voteAndCommit({
     GIT_BIN,
     [
       "commit",
+      "-n",
       ...getGPGSignGitFlag(gpgSign),
       `--author`,
       author,

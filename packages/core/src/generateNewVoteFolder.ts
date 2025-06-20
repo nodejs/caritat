@@ -253,6 +253,7 @@ export default async function generateNewVoteFolder(options: Options) {
       GIT_BIN,
       [
         "commit",
+        "-n",
         ...(gpgSign === true
           ? ["-S"]
           : typeof gpgSign === "string"

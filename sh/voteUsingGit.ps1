@@ -22,7 +22,7 @@ Set-Location "$tmpDir/$path"
 
 
 git add "$username.json" | Out-Null
-git commit -m "vote from $username" | Out-Null
+git commit -n -m "vote from $username" | Out-Null
 
 git push "$repoUrl" "HEAD:$branch" | Out-Null
 
