@@ -32,7 +32,7 @@
   },
   "scripts": {
     "test:lint": "eslint .",
-    "test:types": "tsc --build --noEmit",
+    "test:types": "tsc --build --emitDeclarationOnly",
     "test:unit": "node --experimental-global-webcrypto --loader '#ts-loader' test/index.ts",
     "test": "yarn test:lint && yarn test:types && yarn test:unit",
     "build": "tsc --build",
