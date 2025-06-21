@@ -288,6 +288,7 @@ export default async function countFromGit<T extends BufferSource = BufferSource
       GIT_BIN,
       [
         "commit",
+        "-n",
         ...getGPGSignGitFlag(gpgSign),
         "-m",
         `close vote and aggregate results`,
