@@ -196,17 +196,18 @@ async function act(
       voteFile.patch,
     );
 
+    const fetchAsText = (response: Response) =>
+      response.ok
+        ? response.text()
+        : Promise.reject(
+            new Error(
+              `Fetch error: ${response.status} ${response.statusText}`,
+            ),
+          );
+
     return [
       fetch(ballotFile.contents_url, contentsFetchOptions)
-        .then(response =>
-          response.ok
-            ? response.text()
-            : Promise.reject(
-                new Error(
-                  `Fetch error: ${response.status} ${response.statusText}`,
-                ),
-              ),
-        )
+        .then(fetchAsText)
         .then(
           shouldShuffleCandidates
             ? (ballotData) => {
@@ -266,7 +267,8 @@ async function act(
               ),
             ),
       ),
-    ] as [Promise<string>, Promise<ArrayBuffer>];
+      () => fetch(voteFile.contents_url, contentsFetchOptions).then(fetchAsText),
+    ] as [Promise<string>, Promise<ArrayBuffer>, () => Promise<string>];
   } catch (err) {
     const error = Promise.reject(err);
     return [error, error] as [never, never];
@@ -277,7 +279,7 @@ let previousURL: string | null;
 export default function fetchFromGitHub(
   { url, username, token }: { url: string; username?: string; token?: string },
   callback: (
-    errOfResult: [Promise<string>, Promise<ArrayBuffer>]
+    errOfResult: [Promise<string>, Promise<ArrayBuffer>, () => Promise<string>]
   ) => void | Promise<void>,
 ) {
   const options
