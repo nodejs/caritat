@@ -189,17 +189,36 @@ export function split(
  */
 export function reconstruct(
   parts: BufferSource[],
-  neededParts: u8 = parts.length,
+  neededParts: u8 = undefined,
 ): Uint8Array {
-  if (parts.length < neededParts)
-    throw new Error("Not enough parts to reconstruct key");
   const bytes = parts[0].byteLength - 1;
   const result = new Uint8Array(bytes);
   const dataViews = parts.map(part =>
     ArrayBuffer.isView(part)
       ? new DataView(part.buffer, part.byteOffset, bytes + 1)
       : new DataView(part),
-  );
+  ).filter((shareView, i, shares) => {
+    const x = shareView.getUint8(bytes);
+    for (let j = 0; j < i; j++) {
+      const otherShareView = shares[j];
+      if (x !== otherShareView.getUint8(bytes)) continue;
+      for (let k = 0; k < bytes; i++) {
+        if (shareView.getUint8(k) !== otherShareView.getUint8(k)) {
+          throw new Error("There are conflicting key shares", { cause: [
+            parts[j],
+            parts[i],
+          ] });
+        }
+      }
+      return false;
+    }
+    return true;
+  });
+  if (neededParts == null) {
+    neededParts = dataViews.length;
+  } else if (dataViews.length < neededParts) {
+    throw new Error("Not enough parts to reconstruct key");
+  }
   for (let i = 0; i < bytes; i++) {
     result[i] = reconstructByte(
       Array.from({ length: neededParts }, (_, j) => {
