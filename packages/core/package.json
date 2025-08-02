@@ -18,6 +18,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     "./generateNewVoteFolder": "./dist/generateNewVoteFolder.js",
+    "./getReasonForInvalidateBallot": "./dist/getReasonForInvalidateBallot.js",
     "./countBallotsFromGit": "./dist/countBallotsFromGit.js",
     "./voteUsingGit": "./dist/voteUsingGit.js",
     "./parser": "./dist/parser.js",

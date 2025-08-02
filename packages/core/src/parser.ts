@@ -118,20 +118,3 @@ export function templateBallot(
   };
   return subject + header + yaml.dump(template) + footer + "\n";
 }
-
-export function checkBallot(
-  ballotFile: BallotFileFormat,
-  voteFile: VoteFileFormat,
-  author?: string,
-): boolean {
-  return (
-    ballotFile.poolChecksum === voteFile.checksum
-    && (author ?? ballotFile.author) != null
-    && ballotFile.preferences.every(
-      preference =>
-        voteFile.candidates.some(
-          candidate => candidate === preference.title,
-        ) && Number.isSafeInteger(preference.score),
-    )
-  );
-}
