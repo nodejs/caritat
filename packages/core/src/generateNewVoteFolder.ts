@@ -201,7 +201,7 @@ export default async function generateNewVoteFolder(options: Options) {
     canShuffleCandidates: options.canShuffleCandidates,
   };
   if (voteConfig.shares.length < shareholdersThreshold) {
-    throw new Error(`You would need ${shareholdersThreshold} key parts to close the vote, but only ${voteConfig.shares.length} is available.`);
+    throw new Error(`You would need ${shareholdersThreshold} key parts to close the vote, but only ${voteConfig.shares.length} are available.`);
   }
   let yamlString = yaml.dump(voteConfig);
   await voteFile.writeFile(yamlString);
