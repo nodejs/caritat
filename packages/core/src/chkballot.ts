@@ -1,4 +1,5 @@
-import { checkBallot, loadYmlFile } from "./parser.js";
+import { loadYmlFile } from "./parser.js";
+import { getReasonForInvalidateBallot } from "./getReasonForInvalidateBallot.js";
 import type { BallotFileFormat, VoteFileFormat } from "./parser";
 
 function main(argv: string[]): void {
@@ -8,7 +9,7 @@ function main(argv: string[]): void {
   const voteFile = loadYmlFile<VoteFileFormat>(votePath);
 
   const ballotFile: BallotFileFormat = loadYmlFile<BallotFileFormat>(ballotPath);
-  if (checkBallot(ballotFile, voteFile)) {
+  if (getReasonForInvalidateBallot(ballotFile, voteFile) == null) {
     console.log("valid");
     process.exit(0);
   } else {

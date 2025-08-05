@@ -20,6 +20,7 @@ import {
   getSummarizedBallot,
   summarizeCondorcetBallotForVoter,
 } from "./summary/condorcetSummary.js";
+import { getReasonForInvalidateBallot } from "./getReasonForInvalidateBallot.js";
 
 export async function voteAndCommit({
   GIT_BIN = "git",
@@ -64,11 +65,12 @@ export async function voteAndCommit({
       rawBallot = await fs.readFile(
         path.join(cwd, subPath, `${handle || username}.yml`),
       );
-      {
-        const ballotData = parseYml<BallotFileFormat>(
-          textDecoder.decode(rawBallot),
-        );
-
+      const ballotData = parseYml<BallotFileFormat>(
+        textDecoder.decode(rawBallot),
+      );
+      const invalidityReason = getReasonForInvalidateBallot(ballotData, vote, author);
+      let defaultToKeepEditing = true;
+      if (invalidityReason == null) {
         const preferences = new Map(
           ballotData.preferences.map(element => [
             element.title,
@@ -88,18 +90,38 @@ export async function voteAndCommit({
             break;
         }
         stdout.write("\nDo you want to cast this vote? [Y/n/a] ");
-        stdin.resume();
-        const chars = await once(stdin, "data");
-        stdin.pause();
-        if (
-          chars[0][0] === 0x61 // a
-          || chars[0][0] === 0x41 // A
-        )
-          throw new Error("Aborted by the user");
-        editFile
-          = chars[0][0] === 0x6e // n
-            || chars[0][0] === 0x4e; // N
+        defaultToKeepEditing = false;
+      } else {
+        const t = (title: string) => vote.keepOnlyFirstLineInSummary ? title.replace(/(?<=[^\n]+)\n.+/, "") : title;
+        const { invalidChecksum, candidatesWithInvalidScores, missingCandidates } = invalidityReason;
+        console.warn("Your ballot is invalid.");
+        if (invalidChecksum) {
+          console.error(`Checksum mismatch, vote file checksum is ${invalidChecksum.expected}, your ballot contains ${invalidChecksum.actual}`);
+        }
+        if (missingCandidates?.length) {
+          console.error(`The following candidates are missing: ${missingCandidates.map(t).join(",")}`);
+          console.warn("Hint: it could be due to a typo or a failed copy-pasting");
+        }
+        if (candidatesWithInvalidScores?.length) {
+          console.error(`Invalid scores:\n${candidatesWithInvalidScores.map(p => `- ${p.score} for ${t(p.title)}\n`)}`);
+          console.warn("Use only \"safe\" integers, i.e. values that can be represented as an IEEE-754 double precision number.");
+        }
+        stdout.write("\nDo you want to still want to commit this probably broken ballot? [y/N/a] ");
       }
+      stdin.resume();
+      const chars = await once(stdin, "data");
+      stdin.pause();
+      if (
+        chars[0][0] === 0x61 // a
+        || chars[0][0] === 0x41 // A
+      )
+        throw new Error("Aborted by the user");
+      editFile
+        = defaultToKeepEditing
+          ? (chars[0][0] !== 0x79 // y
+            && chars[0][0] !== 0x59) // Y
+          : (chars[0][0] === 0x6e // n
+            || chars[0][0] === 0x4e); // N
     }
   }
   console.log("Encrypting ballot with vote public key...");
