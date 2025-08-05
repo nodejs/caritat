@@ -13,7 +13,12 @@ export function getSummarizedBallot(ballotStr: string, voteFileString?: string) 
   if (!Array.isArray(ballot?.preferences)) {
     throw new Error("Ballot does not contain a list of preferences");
   }
-  const invalidityReason = voteFileString && getReasonForInvalidateBallot(ballot as BallotFileFormat, yaml.load(voteFileString) as VoteFileFormat);
+  let invalidityReason: ReturnType<typeof getReasonForInvalidateBallot>;
+  try {
+    invalidityReason = voteFileString && getReasonForInvalidateBallot(ballot as BallotFileFormat, yaml.load(voteFileString) as VoteFileFormat);
+  } catch (e) {
+    console.warn(e);
+  }
   return [summarizeCondorcetBallotForVoter(
     _getSummarizedBallot({
       voter: {},

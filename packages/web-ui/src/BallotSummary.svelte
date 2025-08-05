@@ -10,7 +10,8 @@
 {#await ballotSummary}
   <textarea readonly>Getting summary… </textarea>
 {:then data}
-  {#if data[1]?.missingCandidates?.length}
+  {#if data[1]}
+  {#if data[1].missingCandidates?.length}
     <details open><summary>Your ballot is missing some candidates</summary>
       <ul>
         {#each data[1].missingCandidates as candidate}
@@ -22,14 +23,21 @@
       <hr/>
     </details>
   {/if}
-  {#if data[1]?.candidatesWithInvalidScores?.length}
+  {#if data[1].candidatesWithInvalidScores?.length}
     <details open><summary>Your ballot contains invalid scores</summary>
       <ul>
-        {#each data[1].candidatesWithInvalidScores as {title, score }}
+        {#each data[1].candidatesWithInvalidScores as { title, score }}
           <li>{score} for {title}</li>
         {/each}
       </ul>
       <p>Use only "safe" integers, i.e. values that can be represented as an IEEE-754 double precision number.</p>
+      <hr/>
+    </details>
+  {/if}
+  {:else}
+      <details open><summary>We failed to check your ballot</summary>
+      <p>Something wrong happened, it doesn't mean your ballot is invalid.</p>
+      <p><em>Hint: authenticated API calls are more likely to succeed.</em></p>
       <hr/>
     </details>
   {/if}
