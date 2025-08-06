@@ -36,7 +36,7 @@
   {/if}
   {:else}
       <details open><summary>We failed to check your ballot</summary>
-      <p>Something wrong happened, it doesn't mean your ballot is invalid.</p>
+      <p>Something wrong happened when trying to check the ballot validity; it doesn't mean your ballot is invalid, we just can't tell.</p>
       <p><em>Hint: authenticated API calls are more likely to succeed.</em></p>
       <hr/>
     </details>
