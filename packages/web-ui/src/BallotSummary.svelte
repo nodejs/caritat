@@ -57,6 +57,7 @@ details > summary::before {
 pre {
   border: 1px solid currentColor;
   padding: 1ch;
+  white-space: pre-wrap;
 }
 </style>
 
