@@ -1,21 +1,39 @@
 import * as shamir from "../src/shamir.js";
-import { it } from "node:test";
+import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 
+it("should reconstruct a key", () => {
+  assert.strictEqual(
+    Buffer.from(shamir.reconstruct([
+      Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+      Buffer.from([0x62, 0x1e, 0x41, 0x63, 0xfa, 0x5e, 0x0b, 0x1c]),
+      Buffer.from([0xc4, 0xc8, 0x3c, 0x22, 0x53, 0x05, 0x62, 0x0a]),
+    ])).toString("hex"),
+    Buffer.from("caritat").toString("hex"),
+  );
+});
+
 const key = crypto.getRandomValues(new Uint8Array(256));
+
+describe("should reconstruct single byte with enough shareholders", () => {
+  const byte = key[0];
+  for (let shareHolders = 2; shareHolders < 256; shareHolders++) {
+    for (let neededParts = 1; neededParts < shareHolders; neededParts++) {
+      it(`Should destruct/reconstruct a key with ${shareHolders} share holders needing ${neededParts} parts`, () => {
+        const points = Array.from(
+          shamir.generatePoints(byte, shareHolders, neededParts),
+        );
+        const reconstructed = shamir.reconstructByte(points);
+        assert.strictEqual(reconstructed, byte);
+      });
+    }
+  }
+});
+
 const shareHolders = 36;
 const neededParts = 3;
 
 const parts = shamir.split(key.buffer, shareHolders, neededParts);
-
-it("should reconstruct single byte with enough shareholders", () => {
-  const byte = key[0];
-  const points = Array.from(
-    shamir.generatePoints(byte, shareHolders, neededParts),
-  );
-  const reconstructed = shamir.reconstructByte(points);
-  assert.strictEqual(reconstructed, byte);
-});
 
 it("should not give the whole key to any shareholders", () => {
   const byte = key[0];
