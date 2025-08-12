@@ -5,18 +5,18 @@
 
   export let url, username, token, registerBallot;
 
-  let fetchedBallot: Promise<string>, fetchedPublicKey;
+  let fetchedBallot: Promise<string>, fetchedPublicKey, fetchVoteFile;
 
   function onSubmit(this: HTMLFormElement, event: SubmitEvent) {
     event.preventDefault();
     const textarea = this.elements.namedItem("ballot") as HTMLInputElement;
-    registerBallot(textarea.value, fetchedPublicKey);
+    registerBallot(textarea.value, fetchedPublicKey, fetchVoteFile);
   }
 
   fetchedBallot = fetchedPublicKey = Promise.reject("no data");
   beforeUpdate(() => {
     fetchFromGitHub({ url, username, token }, (errOfResult) => {
-      [fetchedBallot, fetchedPublicKey] = errOfResult;
+      [fetchedBallot, fetchedPublicKey, fetchVoteFile] = errOfResult;
     });
   });
 </script>
