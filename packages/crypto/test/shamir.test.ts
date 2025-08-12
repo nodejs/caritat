@@ -126,8 +126,12 @@ it("should fail reconstruct key from not enough shareholders", () => {
 });
 
 it("should fail reconstruct key with duplicate shareholders", () => {
-  const reconstructed = shamir.reconstruct([parts[1], parts[5], parts[1]]);
-  assert.notDeepStrictEqual(reconstructed, key);
+  assert.throws(
+    () => {
+      shamir.reconstruct([parts[1], parts[5], parts[1]], 3);
+    },
+    { message: "Not enough parts to reconstruct key" },
+  );
 });
 
 it("should still reconstruct key with too many shareholders", () => {
