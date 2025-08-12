@@ -134,11 +134,12 @@ export default async function generateNewVoteFolder(options: Options) {
   const GPG_BIN = options.gpgOptions.binaryPath ?? env.GPG_BIN ?? "gpg";
 
   const shareHolders = options.shareholders;
+  const shareholdersThreshold = Number(options.shareholdersThreshold);
 
   const { encryptedPrivateKey, publicKey, shares }
     = await generateAndSplitKeyPair(
       shareHolders.length,
-      Number(options.shareholdersThreshold),
+      shareholdersThreshold,
     );
 
   function toArmordedMessage(data: ArrayBuffer) {
@@ -199,6 +200,9 @@ export default async function generateNewVoteFolder(options: Options) {
     ).filter(String),
     canShuffleCandidates: options.canShuffleCandidates,
   };
+  if (voteConfig.shares.length < shareholdersThreshold) {
+    throw new Error(`You would need ${shareholdersThreshold} key parts to close the vote, but only ${voteConfig.shares.length} are available.`);
+  }
   let yamlString = yaml.dump(voteConfig);
   await voteFile.writeFile(yamlString);
   await voteFile.close();

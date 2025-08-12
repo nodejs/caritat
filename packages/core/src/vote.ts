@@ -1,11 +1,11 @@
 import {
   type BallotFileFormat,
-  checkBallot,
   loadYmlFile,
   loadYmlString,
   parseYml,
   type VoteFileFormat,
 } from "./parser.js";
+import { getReasonForInvalidateBallot } from "./getReasonForInvalidateBallot.js";
 import type { PathOrFileDescriptor } from "fs";
 import type { CandidateScores } from "./votingMethods/VotingMethodImplementation.js";
 import VoteResult from "./votingMethods/VoteResult.js";
@@ -145,20 +145,26 @@ export default class Vote {
   }
 
   public addBallotFile(ballotData: BallotFileFormat, author?: string): Ballot {
-    if (ballotData && checkBallot(ballotData, this.voteFileData, author)) {
-      const preferences: Map<VoteCandidate, Rank> = new Map(
-        ballotData.preferences.map(element => [element.title, element.score]),
-      );
-      const ballot: Ballot = {
-        voter: { id: author ?? ballotData.author },
-        preferences,
-      };
-      this.addBallot(ballot);
-      return ballot;
-    } else {
-      console.warn("Invalid Ballot", author);
+    if (!ballotData) {
+      // eslint-disable-next-line prefer-rest-params
+      console.warn("Missing ballot data", arguments);
+      return null;
     }
-    return null;
+    const invalidityReason = getReasonForInvalidateBallot(ballotData, this.voteFileData, author);
+    if (invalidityReason != null) {
+      // eslint-disable-next-line prefer-rest-params
+      console.warn("Invalid Ballot", arguments, invalidityReason);
+      return null;
+    }
+    const preferences: Map<VoteCandidate, Rank> = new Map(
+      ballotData.preferences.map(element => [element.title, element.score]),
+    );
+    const ballot: Ballot = {
+      voter: { id: author ?? ballotData.author },
+      preferences,
+    };
+    this.addBallot(ballot);
+    return ballot;
   }
 
   public addFakeBallot(author: string): void {

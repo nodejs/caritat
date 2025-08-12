@@ -3,9 +3,9 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "lib": ["ESNext", "dom"],
-    "paths": {
-      "@node-core/caritat-crypto/*": ["../crypto/src/*"]
-    }
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true
   },
   "references": [{ "path": "../crypto" }]
 }
