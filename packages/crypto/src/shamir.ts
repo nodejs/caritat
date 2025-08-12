@@ -202,7 +202,7 @@ export function reconstruct(
     for (let j = 0; j < i; j++) {
       const otherShareView = shares[j];
       if (x !== otherShareView.getUint8(bytes)) continue;
-      for (let k = 0; k < bytes; i++) {
+      for (let k = 0; k < bytes; k++) {
         if (shareView.getUint8(k) !== otherShareView.getUint8(k)) {
           throw new Error("There are conflicting key shares", { cause: [
             parts[j],

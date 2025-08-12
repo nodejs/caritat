@@ -13,6 +13,39 @@ it("should reconstruct a key", () => {
   );
 });
 
+describe("should handle a key part being passed twice", () => {
+  it("fail when there are not enough key parts", () => {
+    assert.notStrictEqual(
+      Buffer.from(shamir.reconstruct([
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+        Buffer.from([0x62, 0x1e, 0x41, 0x63, 0xfa, 0x5e, 0x0b, 0x1c]),
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+      ])).toString("hex"),
+      Buffer.from("caritat").toString("hex"),
+    );
+  });
+  it("throw if the are incompatible key parts", () => {
+    assert.throws(
+      () => shamir.reconstruct([
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+        Buffer.from([0x62, 0x1e, 0x41, 0x63, 0xfa, 0x5e, 0x0b, 0x1c]),
+        Buffer.from([0xc4, 0xc8, 0x3c, 0x22, 0x53, 0x05, 0x62, 0x02]),
+      ]), /There are conflicting key shares/);
+  });
+  it("succeed when there are enough key parts", () => {
+    assert.strictEqual(
+      Buffer.from(shamir.reconstruct([
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+        Buffer.from([0x62, 0x1e, 0x41, 0x63, 0xfa, 0x5e, 0x0b, 0x1c]),
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+        Buffer.from([0xc4, 0xc8, 0x3c, 0x22, 0x53, 0x05, 0x62, 0x0a]),
+        Buffer.from([0xef, 0x05, 0x70, 0x4a, 0xf2, 0xb2, 0xcd, 0x02]),
+      ])).toString("hex"),
+      Buffer.from("caritat").toString("hex"),
+    );
+  });
+});
+
 const key = crypto.getRandomValues(new Uint8Array(256));
 
 describe("should reconstruct single byte with enough shareholders", () => {
@@ -93,12 +126,8 @@ it("should fail reconstruct key from not enough shareholders", () => {
 });
 
 it("should fail reconstruct key with duplicate shareholders", () => {
-  assert.throws(
-    () => {
-      shamir.reconstruct([parts[1], parts[5], parts[1]]);
-    },
-    { message: "Div/0" },
-  );
+  const reconstructed = shamir.reconstruct([parts[1], parts[5], parts[1]]);
+  assert.notDeepStrictEqual(reconstructed, key);
 });
 
 it("should still reconstruct key with too many shareholders", () => {
