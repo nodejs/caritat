@@ -63,5 +63,3 @@ jobs:
           corepack yarn install --immutable
           corepack yarn build
           corepack yarn workspaces foreach --all --no-private npm publish --provenance --access public
-        env:
-          YARN_NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
