@@ -14,6 +14,7 @@
   let encryptDataPromise = new Promise<never>(() => {});
   let shouldSummarize = false;
   let ballotSummary = new Promise<never>(() => {});
+  let fetchVoteFile: undefined | (() => Promise<string>);
 
   let url = globalThis.location?.hash.slice(1);
 
@@ -35,11 +36,11 @@
   function maybeUpdateSummary() {
     ballotSummary = shouldSummarize && ballot ? (async () => {
       // Lazy-loading as the summary is only a nice-to-have.
-      const { getSummarizedBallot } = await import("./ballotSummary.ts");
-      return getSummarizedBallot(ballot);
+      const [{ getSummarizedBallot }, voteFileContents] = await Promise.all([import("./ballotSummary.ts"), fetchVoteFile().catch((e) => console.warn(e))]);
+      return getSummarizedBallot(ballot, voteFileContents);
     })() : new Promise<never>(() => {});
   }
-  function registerBallot(ballotContent, publicKey) {
+  function registerBallot(ballotContent, publicKey, _fetchVoteFile) {
     encryptDataPromise = (async () => {
         const { encryptedSecret, saltedCiphertext } = await encryptData(
           textEncoder.encode(ballotContent) as Uint8Array,
@@ -51,6 +52,7 @@
         });
       })();
     ballot = ballotContent;
+    fetchVoteFile = _fetchVoteFile;
     step = 2;
     maybeUpdateSummary();
   }
