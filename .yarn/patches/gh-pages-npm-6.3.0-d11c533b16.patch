@@ -1,0 +1,92 @@
+diff --git a/lib/git.js b/lib/git.js
+index d4c5724272d00bd1f0d76c47dab47d21ccd094d9..3457c7c0fa30ee8294396ce1d3ef723ed838da93 100644
+--- a/lib/git.js
++++ b/lib/git.js
+@@ -199,8 +199,7 @@ Git.prototype.push = function (remote, branch, force) {
+  * @return {Promise<string>} A promise for the remote URL.
+  */
+ Git.prototype.getRemoteUrl = function (remote) {
+-  return this.exec('config', '--get', 'remote.' + remote + '.url')
+-    .then((git) => {
++  const cleanOutput = (git) => {
+       const repo = git.output && git.output.split(/[\n\r]/).shift();
+       if (repo) {
+         return repo;
+@@ -209,7 +208,9 @@ Git.prototype.getRemoteUrl = function (remote) {
+           'Failed to get repo URL from options or current directory.',
+         );
+       }
+-    })
++    };
++  const pullURL = this.exec('config', '--get', 'remote.' + remote + '.url')
++    .then(cleanOutput)
+     .catch((err) => {
+       throw new Error(
+         'Failed to get remote.' +
+@@ -221,6 +222,7 @@ Git.prototype.getRemoteUrl = function (remote) {
+           'or must be configured with the "repo" option).',
+       );
+     });
++  return Promise.all([pullURL, this.exec('config', '--get', 'remote.' + remote + '.pushurl').then(cleanOutput).catch(() => pullURL)]);
+ };
+ 
+ /**
+@@ -235,7 +237,7 @@ Git.prototype.deleteRef = function (branch) {
+ 
+ /**
+  * Clone a repo into the given dir if it doesn't already exist.
+- * @param {string} repo Repository URL.
++ * @param {[string, string]} repo Repository URL.
+  * @param {string} dir Target directory.
+  * @param {string} branch Branch name.
+  * @param {options} options All options.
+@@ -249,7 +251,7 @@ Git.clone = function clone(repo, dir, branch, options) {
+       return fs.mkdirp(path.dirname(path.resolve(dir))).then(() => {
+         const args = [
+           'clone',
+-          repo,
++          repo[0],
+           dir,
+           '--branch',
+           branch,
+@@ -264,14 +266,17 @@ Git.clone = function clone(repo, dir, branch, options) {
+             // try again without branch or depth options
+             return spawn(options.git, [
+               'clone',
+-              repo,
++              repo[0],
+               dir,
+               '--origin',
+               options.remote,
+             ]);
+           })
+           .then(() => new Git(dir, options.git));
+-      });
++      }).then(repo[0] !== repo[1] ?
++        (g) => spawn(options.git, ['remote', 'set-url', '--push', options.remote, repo[1]], dir).then(() => g) :
++        undefined
++      );
+     }
+   });
+ };
+diff --git a/lib/index.js b/lib/index.js
+index 7b1365b89f96cdb97be12c534215ea390b04ce1a..fbb7a5fc0c6107860e48787294b84884f509732e 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -132,13 +132,13 @@ exports.publish = function publish(basePath, config, callback) {
+     getRepo(options)
+       .then((repo) => {
+         repoUrl = repo;
+-        const clone = getCacheDir(repo);
+-        log('Cloning %s into %s', repo, clone);
++        const clone = getCacheDir(repo[0]);
++        log('Cloning %s into %s', repo[0], clone);
+         return Git.clone(repo, clone, options.branch, options);
+       })
+       .then((git) => {
+         return git.getRemoteUrl(options.remote).then((url) => {
+-          if (url !== repoUrl) {
++          if (url[0] !== repoUrl[0] || url[1] !== repoUrl[1]) {
+             const message =
+               'Remote url mismatch.  Got "' +
+               url +
