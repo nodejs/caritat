@@ -1,7 +1,7 @@
 {
   "name": "caritat",
   "private": true,
-  "packageManager": "yarn@4.10.3+sha224.6020b3cdcdfbd7dbc24b7a7b75d58a249ce36068a8bf97d39aa8cc6d",
+  "packageManager": "yarn@4.14.1+sha224.88b7a7244bbd9040380c417f7eb556d85c67640b651f113cb4c72113",
   "version": "1.6.0",
   "license": "MIT",
   "repository": {
@@ -14,13 +14,18 @@
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^20.0.0",
     "eslint": "^9.2.0",
-    "typescript": "^5.8.3",
+    "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.0"
+  },
+  "dependenciesMeta": {
+    "svelte-preprocess": {
+      "built": true
+    }
   },
   "devEngines": {
     "packageManager": {
       "name": "yarn",
-      "version": "4.10.3"
+      "version": "4.14.1"
     },
     "runtime": {
       "name": "nodejs",
