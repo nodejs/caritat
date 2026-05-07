@@ -4,17 +4,29 @@ The name comes from Marie Jean Antoine Nicolas de Caritat, Marquis of Condorcet,
 French philosopher and mathematician, notably known for championing an election
 method that now named after him.
 
-The goal of this project is to allow organisations of people working remotely to
-cast votes is a secure and transparent way, using a git repository to collect and
+The goal of this project is to allow organizations of people working remotely to
+cast votes in a secure and transparent way, using a git repository to collect and
 authenticate votes.
+
+## Requirements
+
+To be able to cast a vote or create a ballot you will
+need the following tools:
+
+- [Node.js v16+](https://nodejs.org)
+- [git](https://git-scm.com)
+
+If you want to cast a vote with GitHub verified signature
+you will also need to install [PGP](https://www.openpgp.org/).
+Later in the documentation we will check how to install PGP depending
+on your device and how to setup your key, so if you are not familiar
+with it we recommend skipping it for now.
 
 ## Usage
 
 ### Participate to a vote using Caritat
 
 #### Node.js CLI
-
-Requires [Node.js](https://nodejs.org) 16+ and [git](https://git-scm.com).
 
 If the vote is setup on a GitHub pull request and you have
 [`gh`](https://cli.github.com) locally installed and logged in to your GitHub
@@ -105,7 +117,7 @@ documentation on how to use the API.
   - not basing their vote in function of what other has voted (having the
     instigator always vote first helps alleviate this issue).
 - As a Voter, you need to trust the panel of Secret Holders for:
-  - not reconstitue the Vote Private Key before the vote closes.
+  - not reconstitute the Vote Private Key before the vote closes.
   - not leaking the Vote Private Key before the vote closes (if they have
     reconstructed it, which they should not do).
   - not basing their vote in function of what other has voted (if they have
@@ -170,7 +182,7 @@ The two other files can be used to vote without parsing the YAML file.
 Encrypting the ballot is necessary to ensure people voting early do not
 interfere or influence folks voting after them. At the end of the vote, the
 the Vote Private Key can be made public, so anyone can decrypt the ballots and verify
-the result themself. Or it can decided that the Vote Private Key won't be shared in
+the result themselves. Or it can decided that the Vote Private Key won't be shared in
 order to keep the votes anonymous, and a large enough panel of Secret Holders
 (depending on the vote settings) need to share their key parts, decrypt the
 ballots, and share the vote result without disclosing the content of the ballots.
@@ -199,7 +211,7 @@ you have a quantum computer at home to break the RSA encryption).
 
 The license makes no restrictions on how this tool should be used, but keep in
 mind that, as any electronic voting system, it can only be trusted as long as
-the unanonymized vote ballots are made public as soon as the vote closes, which
+the un-anonymized vote ballots are made public as soon as the vote closes, which
 may or may not be OK depending on the type of election you are using this for.
 
 ## How does the tool pick the winner?
