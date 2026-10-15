@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/nodejs/caritat/compare/v1.7.0...v1.7.1) (2026-10-15)
+
+
+### Bug Fixes
+
+* **chore:** support merge and revert commits ([#106](https://github.com/nodejs/caritat/issues/106)) ([829426a](https://github.com/nodejs/caritat/commit/829426a1df14fea246a1cea069a4da13e5db84e2))
+
 ## [1.7.0](https://github.com/nodejs/caritat/compare/v1.6.0...v1.7.0) (2026-04-28)
 
 
