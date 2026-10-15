@@ -228,7 +228,7 @@ export default async function countFromGit<T extends BufferSource = BufferSource
         deletedFiles: [],
       };
     } else if (line !== "") {
-      currentCommit?.[line[0] === 'D' ? 'deletedFiles' : 'files'].push(line.slice(1).trimLeft());
+      currentCommit?.[line[0] === "D" ? "deletedFiles" : "files"].push(line.slice(1).trimLeft());
     }
   }
   countCurrentCommit();

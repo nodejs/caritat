@@ -45,7 +45,7 @@ export default async function reasonToDiscardCommit({
         deletedFiles: [],
       };
     } else if (line !== "") {
-      currentCommit?.[line[0] === 'D' ? 'deletedFiles' : 'files'].push(line.slice(1).trimLeft());
+      currentCommit?.[line[0] === "D" ? "deletedFiles" : "files"].push(line.slice(1).trimLeft());
     }
   }
   const reason = vote.reasonToDiscardCommit(currentCommit);
