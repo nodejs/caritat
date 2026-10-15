@@ -169,7 +169,8 @@ export default async function countFromGit<T extends BufferSource = BufferSource
       "log",
       `${firstCommitRef}..${lastCommitRef}`,
       "--format=///%H %G? %aN <%aE>",
-      "--name-only",
+      "--no-merges",
+      "--name-status",
     ],
     spawnArgs,
   );
@@ -224,9 +225,10 @@ export default async function countFromGit<T extends BufferSource = BufferSource
         signatureStatus: line.charAt(44),
         author: line.slice(46),
         files: [],
+        deletedFiles: [],
       };
     } else if (line !== "") {
-      currentCommit?.files.push(line);
+      currentCommit?.[line[0] === 'D' ? 'deletedFiles' : 'files'].push(line.slice(1).trimLeft());
     }
   }
   countCurrentCommit();

@@ -99,9 +99,10 @@ export default async function countParticipation({
         signatureStatus: line.charAt(44),
         author: line.slice(46),
         files: [],
+        deletedFiles: [],
       };
     } else if (line !== "") {
-      currentCommit?.files.push(line);
+      currentCommit?.[line[0] === 'D' ? 'deletedFiles' : 'files'].push(line.slice(1).trimLeft());
     }
   }
   if (currentCommit) {
