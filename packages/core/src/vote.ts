@@ -48,6 +48,7 @@ export interface VoteCommit {
   author: string;
   signatureStatus: string;
   files: string[];
+  deletedFiles: string[];
 }
 
 export default class Vote {
@@ -123,8 +124,12 @@ export default class Vote {
   }
 
   reasonToDiscardCommit(commit: VoteCommit): string {
-    if (commit.files.length !== 1)
+    if (commit.files.length > 1)
       return "This commit touches more than one file.";
+    if (commit.deletedFiles.length !== 0)
+      return "This commit deletes some files.";
+    if (commit.files.length === 0)
+      return "This commit is empty";
     if (this.#alreadyCommittedVoters.has(commit.author))
       return "A more recent vote commit from this author has already been counted.";
     if (

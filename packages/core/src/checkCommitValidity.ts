@@ -29,7 +29,8 @@ export default async function reasonToDiscardCommit({
       "show",
       commitRef,
       "--format=///%H %G? %aN <%aE>",
-      "--name-only",
+      "--no-merges",
+      "--name-status",
     ],
     spawnArgs,
   );
@@ -41,9 +42,10 @@ export default async function reasonToDiscardCommit({
         signatureStatus: line.charAt(44),
         author: line.slice(46),
         files: [],
+        deletedFiles: [],
       };
     } else if (line !== "") {
-      currentCommit?.files.push(line);
+      currentCommit?.[line[0] === "D" ? "deletedFiles" : "files"].push(line.slice(1).trimLeft());
     }
   }
   const reason = vote.reasonToDiscardCommit(currentCommit);
